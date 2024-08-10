@@ -1,0 +1,51 @@
+div#countPhoto,
+div#detailCount {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    padding-top: 5%;
+    background-color: rgba(0, 0, 0, 0.398);
+    backdrop-filter: blur(5px);
+    padding-top: 10%;
+}
+
+.contenuImage img {
+    width: 100%;
+}
+
+.contenuImage {
+    position: relative;
+    padding: 0;
+}
+
+.contenuImage button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: 0;
+    color: white;
+    font-size: 25px;
+    transition: all .5s;
+}
+
+.contenuImage button:hover {
+    color: wheat;
+}
+
+.caractImage {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #00000094;
+    width: 100%;
+}
+
+.caractImage h1 {
+    font-weight: bold;
+    color: white;
+    margin-left: 30px;
+}

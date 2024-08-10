@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * Configuration of the Database component
+ */
+return [
+  /**
+   * Type of the database connection
+   * Only supports mysql for the moment
+   */
+  "type" => "mysql",
+
+  /**
+   * Port of the connection (if mysql)
+   */
+  "port" => 3306
+];
