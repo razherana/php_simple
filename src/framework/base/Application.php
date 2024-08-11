@@ -2,6 +2,8 @@
 
 namespace framework\base;
 
+use BadMethodCallException;
+
 final class Application
 {
   /**
@@ -36,8 +38,11 @@ final class Application
     if (is_array($component)) foreach ($component as $c) {
       if ($c instanceof Component)
         $this->components[] = $c;
-      else throw new \Exception($c::class . " is not a component", 1);
+      else
+        throw new BadMethodCallException("The argument inside the array of Component" . $c::class . " is not a component", 1);
     }
+    // This should not happen
+    else throw new BadMethodCallException("The argument " . $component::class . " is nor a Component or an array of Component", 1);
   }
 
   /**
