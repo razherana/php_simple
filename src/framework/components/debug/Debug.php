@@ -8,7 +8,7 @@ use ErrorException;
 
 class Debug extends ConfigurableElement implements Component
 {
-  private $is_activated = false, $is_error_exception = false;
+  private $is_activated = false, $is_error_exception = false, $is_test = false;
 
   public function config_file(): string
   {
@@ -30,9 +30,17 @@ class Debug extends ConfigurableElement implements Component
     }
   }
 
+  public function run_test()
+  {
+    if ($this->is_test) {
+      require_once(___DIR___ . '/resources/tests/' . $this->is_test . '.php');
+    }
+  }
+
   public function initialize()
   {
     $this->is_activated = $this->read_config('debug');
     $this->is_error_exception = $this->read_config('error_exception');
+    $this->is_test = $this->read_config('test_file');
   }
 }
