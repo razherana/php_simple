@@ -5,6 +5,7 @@ namespace framework\components\route;
 use framework\base\Component;
 use framework\http\Request;
 use framework\base\config\ConfigurableElement;
+use framework\components\route\exceptions\RouteFileException;
 use framework\components\route\storage\RouteSave;
 use framework\http\Response;
 
@@ -34,16 +35,31 @@ class Router extends ConfigurableElement implements Component
   public function initialize()
   {
     $this->request = Request::getFromGlobalVars();
-    $path = $this->read_config('route_files');
+
+    /**
+     * @var string $path
+     */
+    $path = ___DIR___ . '/' . $this->read_config('route_dir');
+
+    /**
+     * @var array $files
+     */
+    $files = $this->read_config('route_files');
+
+    // Add .php extension to each route files
+    foreach ($files as &$route_name) $route_name = $route_name . '.php';
 
     if (!is_dir($path))
-      throw new \Exception("$path is not a directory", 1);
+      throw new RouteFileException("The route directory in config : '$path' is not a directory", 1);
 
     if (($dir = opendir($path)) === false)
-      throw new \Exception("Failed to open the directory $path", 1);
+      throw new RouteFileException("Failed to open the directory of route path : '$path'", 1);
 
     while ($file_name = readdir($dir)) {
-      if (is_file(($full_dir_file = $path . '/' . $file_name)) && substr($file_name, strlen($file_name) - 4) == '.php')
+      if (
+        is_file(($full_dir_file = $path . '/' . $file_name))
+        && in_array($file_name, $files)
+      )
         include($full_dir_file);
     }
   }
