@@ -78,9 +78,6 @@ abstract class MysqlQueryable
         // Checks the trait if it has the method
         if (method_exists($name1, $name . '_instance'))
           return $this->{$name . '_instance'}(...$arguments);
-        // Else throw a bad method call exception
-        else
-          throw new BadMethodCallException("Undefined method " . $name);
       }
     throw new BadMethodCallException("Undefined method " . $name);
   }
@@ -94,9 +91,6 @@ abstract class MysqlQueryable
         // Checks the trait if it has the method
         if (method_exists($name1, $name . '_static'))
           return static::{$name . '_static'}(...$arguments);
-        // Else throw a bad method call exception
-        else
-          throw new BadMethodCallException("Undefined static method " . $name);
       }
     throw new BadMethodCallException("Undefined static method " . $name);
   }
