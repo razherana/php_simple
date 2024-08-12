@@ -46,21 +46,13 @@ class Router extends ConfigurableElement implements Component
      */
     $files = $this->read_config('route_files');
 
-    // Add .php extension to each route files
-    foreach ($files as &$route_name) $route_name = $route_name . '.php';
-
+    // Checks the dir in route config (route_dir) if exist and a directory
     if (!is_dir($path))
       throw new RouteFileException("The route directory in config : '$path' is not a directory", 1);
 
-    if (($dir = opendir($path)) === false)
-      throw new RouteFileException("Failed to open the directory of route path : '$path'", 1);
-
-    while ($file_name = readdir($dir)) {
-      if (
-        is_file(($full_dir_file = $path . '/' . $file_name))
-        && in_array($file_name, $files)
-      )
-        include($full_dir_file);
+    // Read all files from the route_files config
+    foreach ($files as $file) if (is_file($current_route_file = $path . '/' . $file . '.php')) {
+      include($current_route_file);
     }
   }
 
