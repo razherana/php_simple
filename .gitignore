@@ -1,2 +1,2 @@
-./tests
-./env.php
+tests/
+env.php
