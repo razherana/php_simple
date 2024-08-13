@@ -19,7 +19,7 @@ trait WhereTrait
   protected static function where_static($element1, $condition, $element2, $clean = true)
   {
     $el = new static();
-    return $el->whereInstance($element1, $condition, $element2, $clean);
+    return $el->where_instance($element1, $condition, $element2, $clean);
   }
 
   protected function where_instance($element1, $condition, $element2, $clean = true)
