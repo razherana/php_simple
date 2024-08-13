@@ -48,6 +48,7 @@ trait WhereTrait
   public function or_group_where($conditions)
   {
     $dummy = new static;
+    $dummy->mode_test = true;
     $conditions = $conditions->bindTo($dummy, static::class);
     $conditions();
 
@@ -65,6 +66,7 @@ trait WhereTrait
   public function and_group_where($conditions)
   {
     $dummy = new static;
+    $dummy->mode_test = true;
     $conditions = $conditions->bindTo($dummy, static::class);
     $conditions();
 

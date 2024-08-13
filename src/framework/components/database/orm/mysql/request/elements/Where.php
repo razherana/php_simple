@@ -13,7 +13,7 @@ class Where implements MysqlElement, MysqlGroupableElement
 
   public const NONE = 0, AND = 1, OR = 2;
 
-  private $data = [];
+  public $data = [];
 
   public function __construct($element1, $condition, $element2, $type, $clean = true)
   {
@@ -66,7 +66,9 @@ class Where implements MysqlElement, MysqlGroupableElement
     if (count($group['elements']) <= 1)
       throw new MysqlWhereException("This where group contains only one or no elements, consider using normal and or where");
 
-    unset($group['elements'][array_key_first($group['elements'])]->data[0]);
+    // unset the "WHERE" of the first element of the group
+    if (isset($group['elements'][array_key_first($group['elements'])]->data[0]))
+      unset($group['elements'][array_key_first($group['elements'])]->data[0]);
 
     foreach ($group['elements'] as $e) {
       if (!($e instanceof self))
