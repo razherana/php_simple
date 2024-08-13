@@ -1,12 +1,11 @@
 <?php
 
 use framework\components\route\Route;
-use framework\rule\Rule;
 
 Route::get('/', function () {
   return "test" . ($this->request->getParameters['test'] ?? '');
 })->name('index')->save();
 
-Route::get('/<<var>>', function ($var) {
-  return "test" . ($var);
+Route::get('/<<var>>/<<var2>>', function ($var, $var2) {
+  return "test " . ($var) . " aiza koa " . ($var2) . "<br>";
 })->name('index.var')->save();
