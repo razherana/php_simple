@@ -25,10 +25,20 @@ abstract class MysqlQueryable
    * in order
    * @var MysqlElement[] $elements
    */
-  protected $elements = [];
+  public $elements = [];
+
+  /**
+   * Mode test or value getter
+   * Set to true if to use on some mysql element 
+   * @var bool $mode_test
+   */
+  public $mode_test = false;
 
   final protected function verify_query()
   {
+    // If mode test, then check nothing
+    if ($this->mode_test) return;
+
     // Verify if not a insert into query and followed by other things
     // Note: InsertInto query has only one element -> the InsertInto instance itself
     if (!empty($this->elements) && $this->elements[0] instanceof InsertInto && count($this->elements) > 1) {
