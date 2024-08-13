@@ -1,5 +1,5 @@
 <?php
 
-use framework\components\database\orm\mysql\queries\DefaultQueryMaker;
+use framework\components\database\orm\mysql\queries\SortedQueryMaker;
 
-dd(DefaultQueryMaker::select()->from('users', 'u')->join("messages", "m")->on(fn () => $this->where('u.id', '=', 'm.id_sender', false)->and_where('u.id', '!=', null)->and_group_where(fn () => $this->where('u.id', '!=', 1)->and_where('m.id', '!=', 2)))->decode_query());
+dd(SortedQueryMaker::where('test.id', '=', 6)->select()->and_where('users.id', '!=', null)->from('test')->join('users')->on(fn () => $this->where('users.id', '!=', null))->decode_query());
