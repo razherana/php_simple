@@ -29,11 +29,11 @@ class InsertInto implements MysqlElement
   {
     $datas = $this->datas;
 
-    foreach ($datas as $column => &$value) {
-      $value = MysqlEscaper::clean_and_add_quotes($value);
+    foreach ($datas as $column => $value) {
+      $datas[$column] = MysqlEscaper::clean_and_add_quotes($value);
 
       if (is_string($column)) {
-        $value = implode(' ', [$column, $value]);
+        $datas[$column] = implode(' ', [$column, $value]);
       }
     }
 
