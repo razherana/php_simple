@@ -23,7 +23,7 @@ class On implements MysqlElement
    */
   public function __construct($condition_callable, $mysql_queryable_class)
   {
-    if (empty($mysql_queryable_class) || get_parent_class($mysql_queryable_class) !== MysqlQueryable::class) {
+    if (is_a($mysql_queryable_class, MysqlQueryable::class)) {
       throw new MysqlJoinException("The mysql_queryable_class : '$mysql_queryable_class' given is not a MysqlQueryable object");
     }
 
