@@ -116,8 +116,7 @@ abstract class BaseModel extends SortedQueryMaker
 
   public static function all($selects = ['*'])
   {
-    $a = new static(true, true);
-    $a->select_instance($selects);
+    return static::select($selects)->get();
   }
 
   public function decode_query(): string
