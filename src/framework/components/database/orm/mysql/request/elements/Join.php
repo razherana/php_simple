@@ -33,9 +33,9 @@ class Join extends From
   public function decode(): string
   {
     $type = self::TYPES[$this->join_type];
-    
-    // If $type is NONE, use blank. Else use the $type and add space and add JOIN
-    $start = ($type == self::NONE ? ($type . ' ') : '') . "JOIN ";
+
+    // If $type is blank use blank. Else use the $type and add space and add JOIN
+    $start = ($type == '' ? '' : ($type . ' ')) . "JOIN ";
 
     $as = "";
     if (!is_null($this->as)) $as = ' AS ' . $this->as;
