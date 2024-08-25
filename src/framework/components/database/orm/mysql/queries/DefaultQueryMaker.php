@@ -20,8 +20,21 @@ class DefaultQueryMaker extends MysqlQueryable
 {
   use SelectTrait, WhereTrait, FromTrait, OrderTrait, RawTrait, DeleteTrait, InsertIntoTrait, OnTrait, JoinTrait;
 
+  /**
+   * Contains the temporary query
+   * @var string $temp_query
+   */
+  protected $temp_query = null;
+
+  final public function reset()
+  {
+    $this->temp_query = null;
+  }
+
   public function decode_query(): string
   {
+    if(!is_null($this->temp_query)) return $this->temp_query;
+
     $this->verify_query();
     $els = [];
     foreach ($this->elements as $e) {
