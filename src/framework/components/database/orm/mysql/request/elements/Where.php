@@ -22,6 +22,16 @@ class Where implements MysqlElement, MysqlGroupableElement
   }
 
   /**
+   * Adds a prefix to the first element of the where
+   * @return $this
+   */
+  public function add_prefix($prefix = '')
+  {
+    $this->data[1] = $prefix . $this->data[1];
+    return $this;
+  }
+
+  /**
    * To clean or not
    * @param bool $clean
    */
