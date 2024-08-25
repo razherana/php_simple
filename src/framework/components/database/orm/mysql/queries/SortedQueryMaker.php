@@ -107,12 +107,12 @@ class SortedQueryMaker extends DefaultQueryMaker
     }
 
     // $select, $delete, $insert_into
-    // Only ONE should be !== null
+    // Only ONE should be NOT null
     $count = count($arr = array_filter([$select, $delete, $insert_into], function ($e) {
       return $e !== null;
     }));
 
-    // Gets the classname inside $arr (array_containing only the only main)
+    // Gets the classname inside $arr (array_containing only the $main)
     $class_names = [];
     if ($count > 0) foreach ($arr as $v) $class_names[] = $v::class;
 
