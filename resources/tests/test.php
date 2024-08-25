@@ -64,12 +64,3 @@ class Reaction extends BaseModel
   }
 }
 
-// $u = User::with(['posts'])->relation('posts2', function () {
-//   return $this->has_many(Post::class, 'id', 'id2');
-// });
-// $u->get();
-
-$a = User::with(['messages_sent']);
-dd($a->get());
-
-// dd($u->relation_info_maps);
