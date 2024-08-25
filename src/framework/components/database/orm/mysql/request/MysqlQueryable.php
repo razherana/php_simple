@@ -8,6 +8,8 @@ use ReflectionClass;
 use framework\components\database\orm\mysql\exceptions\MysqlInsertIntoException;
 use framework\components\database\orm\mysql\exceptions\MysqlGroupableElementException;
 
+use framework\components\database\orm\mysql\models\relations\traits\RelationTrait;
+
 use framework\components\database\orm\mysql\request\elements\InsertInto;
 
 use framework\components\database\orm\mysql\request\interfaces\MysqlElement;
@@ -79,10 +81,19 @@ abstract class MysqlQueryable
     return $array_query['type']::decode_group($array_query);
   }
 
+  /**
+   * Use these traits for __call and __callStatic
+   * @return \ReflectionClass[]
+   */
+  protected static function use_traits(): array
+  {
+    return (new ReflectionClass(static::class))->getTraits();
+  }
+
   public function __call($name, $arguments): static
   {
     // Checks for all traits if one of the trait has the method
-    foreach ((new ReflectionClass(static::class))->getTraits() as $name1 => $trait)
+    foreach (static::use_traits() as $name1 => $trait)
       // Checks the trait if it uses has MysqlRequestTrait
       if (in_array(MysqlRequestTrait::class, $trait->getTraitNames())) {
         // Checks the trait if it has the method
@@ -95,14 +106,53 @@ abstract class MysqlQueryable
   public static function __callStatic($name, $arguments): static
   {
     // Checks for all traits if one of the trait has the method
-    foreach ((new ReflectionClass(static::class))->getTraits() as $name1 => $trait)
+    foreach (static::use_traits() as $name1 => $trait) {
       // Checks the trait if it uses has MysqlRequestTrait
       if (in_array(MysqlRequestTrait::class, $trait->getTraitNames())) {
         // Checks the trait if it has the method
         if (method_exists($name1, $name . '_static'))
           return static::{$name . '_static'}(...$arguments);
       }
+    }
     throw new BadMethodCallException("Undefined static method " . $name);
+  }
+
+  /**
+   * Search an element inside $this->elements
+   * This method ignores group element
+   * 
+   * @param string[]|string $type The types of the element searched
+   * @param ?\Closure $callable If the callable is defined, 
+   * it uses that callable as a second comparator. The callable is binded with the element in question
+   */
+  final public function search_element($type, $callable = null): MysqlElement|false
+  {
+    if (is_string($type)) $type = [$type];
+
+    if (is_null($callable)) $callable = function () {
+      return true;
+    };
+
+    foreach ($this->elements as $e) {
+      if (is_array($e)) continue;
+
+      if (in_array($e::class, $type) && $callable->call($e)) {
+        return $e;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Pushes the content of $query inside of the current query
+   * @param static $query
+   */
+  public function push_query($query)
+  {
+    foreach ($query->elements as $e)
+      $this->elements[] = $e;
+    return $this;
   }
 
   /**
