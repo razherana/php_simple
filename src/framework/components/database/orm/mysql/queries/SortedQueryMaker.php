@@ -12,6 +12,7 @@ use framework\components\database\orm\mysql\request\elements\Join;
 use framework\components\database\orm\mysql\request\elements\On;
 use framework\components\database\orm\mysql\request\elements\Order;
 use framework\components\database\orm\mysql\request\elements\Select;
+use framework\components\database\orm\mysql\request\elements\UpdateSet;
 use framework\components\database\orm\mysql\request\elements\Where;
 use framework\components\database\orm\mysql\traits\DeleteTrait;
 use framework\components\database\orm\mysql\traits\FromTrait;
@@ -20,6 +21,7 @@ use framework\components\database\orm\mysql\traits\JoinTrait;
 use framework\components\database\orm\mysql\traits\OnTrait;
 use framework\components\database\orm\mysql\traits\OrderTrait;
 use framework\components\database\orm\mysql\traits\SelectTrait;
+use framework\components\database\orm\mysql\traits\UpdateSetTrait;
 use framework\components\database\orm\mysql\traits\WhereTrait;
 
 /**
@@ -27,7 +29,7 @@ use framework\components\database\orm\mysql\traits\WhereTrait;
  */
 class SortedQueryMaker extends DefaultQueryMaker
 {
-  use SelectTrait, WhereTrait, FromTrait, OrderTrait, DeleteTrait, InsertIntoTrait, OnTrait, JoinTrait;
+  use SelectTrait, WhereTrait, FromTrait, OrderTrait, DeleteTrait, InsertIntoTrait, OnTrait, JoinTrait, UpdateSetTrait;
 
   /**
    * Contains the unordered $elements
@@ -56,6 +58,7 @@ class SortedQueryMaker extends DefaultQueryMaker
     $delete = null;
     $insert_into = null;
     $from = null;
+    $update_set = null;
 
     foreach ($this->elements as $e) {
       if (is_array($e)) switch ($e['type']) {
@@ -88,6 +91,9 @@ class SortedQueryMaker extends DefaultQueryMaker
         case From::class:
           $from = $e;
           break;
+        case UpdateSet::class:
+          $update_set = $e;
+          break;
       }
     }
 
@@ -106,9 +112,9 @@ class SortedQueryMaker extends DefaultQueryMaker
       $joins_divised[] = $j[1];
     }
 
-    // $select, $delete, $insert_into
+    // $select, $delete, $insert_into, $update_set
     // Only ONE should be NOT null
-    $count = count($arr = array_filter([$select, $delete, $insert_into], function ($e) {
+    $count = count($arr = array_filter([$select, $delete, $insert_into, $update_set], function ($e) {
       return $e !== null;
     }));
 
@@ -123,9 +129,11 @@ class SortedQueryMaker extends DefaultQueryMaker
 
     $main = $arr[array_key_first($arr)];
 
-    if ($insert_into === null)
-      return array($main, $from, ...$joins_divised, ...$wheres, ...$order_bys);
-    else
+    if ($insert_into !== null)
       return array($insert_into);
+    else if ($update_set !== null)
+      return array($update_set, ...$wheres);
+    else
+      return array($main, $from, ...$joins_divised, ...$wheres, ...$order_bys);
   }
 }

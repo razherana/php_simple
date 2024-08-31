@@ -11,6 +11,7 @@ use framework\components\database\orm\mysql\traits\OnTrait;
 use framework\components\database\orm\mysql\traits\OrderTrait;
 use framework\components\database\orm\mysql\traits\RawTrait;
 use framework\components\database\orm\mysql\traits\SelectTrait;
+use framework\components\database\orm\mysql\traits\UpdateSetTrait;
 use framework\components\database\orm\mysql\traits\WhereTrait;
 
 /**
@@ -18,7 +19,7 @@ use framework\components\database\orm\mysql\traits\WhereTrait;
  */
 class DefaultQueryMaker extends MysqlQueryable
 {
-  use SelectTrait, WhereTrait, FromTrait, OrderTrait, RawTrait, DeleteTrait, InsertIntoTrait, OnTrait, JoinTrait;
+  use SelectTrait, WhereTrait, FromTrait, OrderTrait, RawTrait, DeleteTrait, InsertIntoTrait, OnTrait, JoinTrait, UpdateSetTrait;
 
   /**
    * Contains the temporary query
