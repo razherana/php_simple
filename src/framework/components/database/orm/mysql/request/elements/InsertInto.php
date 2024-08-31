@@ -7,11 +7,14 @@ use framework\components\database\orm\mysql\request\utils\MysqlEscaper;
 
 class InsertInto implements MysqlElement
 {
-  private $datas = [], $table_name = "";
+  private $datas = [], $table_name = "", $columns = [];
 
   public function decode(): string
   {
-    return 'INSERT INTO ' . $this->table_name . ' VALUES (' . implode(', ', $this->datas) . ')';
+    if (count($this->columns) <= 0)
+      return 'INSERT INTO ' . $this->table_name . ' VALUES (' . implode(', ', $this->datas) . ')';
+
+    return 'INSERT INTO ' . $this->table_name . ' (' . implode(', ', $this->columns) . ') VALUES (' . implode(', ', $this->datas) . ')';
   }
 
   /**
@@ -28,15 +31,17 @@ class InsertInto implements MysqlElement
   private function decode_datas()
   {
     $datas = $this->datas;
+    $columns = [];
 
     foreach ($datas as $column => $value) {
       $datas[$column] = MysqlEscaper::clean_and_add_quotes($value);
 
       if (is_string($column)) {
-        $datas[$column] = implode(' ', [$column, $value]);
+        $columns[] = $column;
       }
     }
 
+    $this->columns = $columns;
     $this->datas = array_values($datas);
   }
 }
