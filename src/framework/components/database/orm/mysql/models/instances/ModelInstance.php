@@ -3,9 +3,12 @@
 namespace framework\components\database\orm\mysql\models\instances;
 
 use framework\components\database\orm\mysql\models\BaseModel;
+use framework\components\database\orm\mysql\models\instances\traits\ModelInstanceTrait;
 
 class ModelInstance extends DefaultModelInstance
 {
+  use ModelInstanceTrait;
+
   /**
    * Contains Model::class or Model if possible
    * @var BaseModel|string $parent_model
