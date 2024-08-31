@@ -32,8 +32,10 @@ class Debug extends ConfigurableElement implements Component
 
   public function run_test()
   {
-    if ($this->is_test) {
+    if (is_string($this->is_test)) {
       require_once(___DIR___ . '/resources/tests/' . $this->is_test . '.php');
+    } elseif (is_array($this->is_test)) foreach ($this->is_test as $test) {
+      require_once(___DIR___ . '/resources/tests/' . $test . '.php');
     }
   }
 

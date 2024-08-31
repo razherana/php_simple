@@ -18,6 +18,7 @@ return [
    * Contains the directory of test_file
    * The test file should not contain a .php extension
    * If not used, please make it false
+   * @var string|string[]
    */
   "test_file" => 'test'
 ];
