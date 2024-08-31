@@ -12,7 +12,7 @@ trait InsertIntoTrait
    * @param string $table_name
    * @param string[] $values
    */
-  public static function insertInto($table_name, $values)
+  public static function insert_into($table_name, $values)
   {
     $a = new static();
     $a->elements[] = new InsertInto($table_name, $values);
