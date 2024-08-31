@@ -6,15 +6,15 @@ class User extends BaseModel
 {
   public static $table = 'users';
 
-  public static $with = [];
+  public static $with = ['messages_sent'];
+
+  protected static $fillable = ['name'];
 
   public static $primary_key = 'id';
 
   public function messages_sent()
   {
-    return $this->has_many(Message::class, 'id', 'id_sender', function () {
-      $this->where('id_sender', '<', 5);
-    });
+    return $this->has_many(Message::class, 'id', 'id_sender');
   }
 
   public function messages_received()
