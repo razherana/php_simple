@@ -3,7 +3,7 @@
 /**
  * Defines the main directory of the app
  */
-define("___DIR___", __DIR__);
+define("___DIR___", str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
 
 
 // Database Connection:
