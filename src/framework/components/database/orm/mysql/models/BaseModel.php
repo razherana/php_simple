@@ -59,6 +59,20 @@ abstract class BaseModel extends SortedQueryMaker
   public static $primary_key = 'id';
 
   /**
+   * Contains column usable 
+   * when creating data, null = don't use
+   * @var string|string[]|null $fillable
+   */
+  protected static $fillable = null;
+
+  /**
+   * Contains column to not use
+   * when creating data, null = don't use
+   * @var string|string[]|null $non_fillable
+   */
+  protected static $non_fillable = '*';
+
+  /**
    * Contains information about the table
    * @var DescribedColumn[] $described_columns
    */
@@ -154,5 +168,45 @@ abstract class BaseModel extends SortedQueryMaker
 
     // Else
     return ModelConversion::to_multiple_model($all, $this::class);
+  }
+
+  /**
+   * Creates a new element
+   * @param array<string, mixed> $datas
+   */
+  public static function create($datas)
+  {
+    $datas = self::filter_datas($datas);
+
+    $query = SortedQueryMaker::insert_into(static::$table, $datas);
+    return MysqlQueryExecuter::run($query->decode_query());
+  }
+
+  /**
+   * Filter datas through fillable and non_fillable
+   * @var array<string, mixed> $array
+   */
+  public static function filter_datas($array)
+  {
+    $fillable = static::$fillable;
+    $non_fillable = static::$non_fillable;
+
+    if (is_null($fillable) && is_null($non_fillable)) {
+      throw new ModelDefinitionException("\$fillable and \$non_fillable are both null");
+    }
+
+    if (is_array($fillable)) {
+      $array = array_filter($array, function ($k) use ($fillable) {
+        return in_array($k, $fillable);
+      }, ARRAY_FILTER_USE_KEY);
+    } elseif ($non_fillable === '*') {
+      $array = [];
+    } elseif (is_array($non_fillable)) {
+      $array = array_filter($array, function ($k) use ($non_fillable) {
+        return !in_array($k, $non_fillable);
+      }, ARRAY_FILTER_USE_KEY);
+    }
+
+    return $array;
   }
 }
