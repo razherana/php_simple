@@ -2,6 +2,7 @@
 
 namespace framework\components\database\orm\mysql\traits;
 
+use framework\components\database\orm\mysql\exceptions\MysqlWhereException;
 use framework\components\database\orm\mysql\request\elements\Where;
 
 /**
@@ -76,6 +77,56 @@ trait WhereTrait
       'type_where' => Where::AND,
       'elements' => $elements
     ];
+
+    return $this;
+  }
+
+  /**
+   * Adds where, then typegiven where next
+   * Uses = for the operator, if a third element exists
+   * It will be used as the operator
+   * @param array<int, array<int, string>> $wheres
+   * @param int $type_to_use
+   * @param string $default_operator
+   */
+  public function where_all($wheres, $type_to_use = Where::AND, $default_operator = "=")
+  {
+    if (!is_array($wheres)) {
+      throw new MysqlWhereException("The \$wheres in where_all() is not an array");
+    }
+
+    switch ($type_to_use) {
+      case Where::AND:
+        $type_to_use = "and";
+        break;
+      case Where::OR:
+        $type_to_use = "or";
+        break;
+      default:
+        throw new MysqlWhereException("The type to use is undefined: $type_to_use");
+    }
+
+    $wheres = array_values($wheres);
+
+    if (count($wheres) === 0) return $this;
+
+    $this->where_instance(
+      $wheres[0][0],
+      $wheres[0][2] ?? $default_operator,
+      $wheres[0][1]
+    );
+
+    if (count($wheres) === 1)
+      return $this;
+    else unset($wheres[0]);
+
+    foreach ($wheres as $where) {
+      $this->{$type_to_use . "_where"}(
+        $where[0],
+        $where[2] ?? $default_operator,
+        $where[1]
+      );
+    }
 
     return $this;
   }
