@@ -148,6 +148,16 @@ class RelationInfoMap
   }
 
   /**
+   * Get the result for lazy load
+   * @param mixed $key_value
+   * @return array
+   */
+  public function get_lazy($key_value)
+  {
+    return $this->data['model']::where($this->data['other_id'], '=', $key_value)->get();
+  }
+
+  /**
    * @return DefaultQueryMaker
    */
   public function build_query()
