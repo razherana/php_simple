@@ -22,7 +22,7 @@ trait ModelInstanceTrait
     }
     $query = SortedQueryMaker::update_set($parent_model::$table, $this->attributes)->where_all($this->original_attributes);
 
-    return MysqlQueryExecuter::run($query);
+    return MysqlQueryExecuter::run($query->decode_query());
   }
 
   /**
@@ -38,6 +38,6 @@ trait ModelInstanceTrait
     }
     $query = SortedQueryMaker::delete()->from($parent_model::$table)->where_all($this->original_attributes);
 
-    return MysqlQueryExecuter::run($query);
+    return MysqlQueryExecuter::run($query->decode_query());
   }
 }
