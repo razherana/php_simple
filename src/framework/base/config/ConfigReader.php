@@ -16,7 +16,7 @@ class ConfigReader
    * @param string $file_name
    * @param string $config_name
    */
-  public static function get($file_name, $config_name)
+  public static function get($file_name, $config_name): mixed
   {
     $full_path = ___DIR___ . self::CONFIG_DIRECTORY . $file_name . '.php';
 
@@ -24,6 +24,7 @@ class ConfigReader
       throw new ConfigReadingException("The file '$file_name' with a full path of '$full_path' doesn't exist");
     }
 
+    /** @var array<string, mixed> $content */
     $content = (include($full_path));
 
     if (!isset($content[$config_name])) {
