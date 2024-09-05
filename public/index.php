@@ -1,5 +1,7 @@
 <?php
 
+$START_TIME = microtime(true);
+
 require_once(__DIR__ . '/../env.php');
 require_once(___DIR___ . '/src/autoloader.php');
 require_once(___DIR___ . '/src/function_autoloader.php');
@@ -24,7 +26,7 @@ $deb->execute();
 // Add components here
 $components = [
   new Database,
-  // new Router
+  new Router
 ];
 
 $app->add_component($components);
@@ -32,4 +34,6 @@ $app->add_component($components);
 $app->initialize();
 $app->execute();
 
-$deb->run_test();
+$EXECUTION_TIME = microtime(true) - $START_TIME;
+
+dd($EXECUTION_TIME);
