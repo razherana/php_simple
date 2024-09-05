@@ -26,7 +26,7 @@ class Request
   /**
    * Initializes the request_uri
    */
-  private function setRequestUri()
+  private function set_request_uri()
   {
     $uri = urldecode($this->server['REQUEST_URI']);
 
@@ -60,10 +60,10 @@ class Request
     public $files,
     public $server,
   ) {
-    $this->setRequestUri();
+    $this->set_request_uri();
   }
 
-  public static function getFromGlobalVars()
+  public static function get_from_global_vars()
   {
     return new self($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER);
   }
