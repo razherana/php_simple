@@ -12,5 +12,16 @@ return [
   /**
    * All route files
    */
-  "route_files" => ['web']
+  "route_files" => ['web'],
+
+  /**
+   * Use a saved route file
+   * If not exists then use automatically saves it
+   */
+  "route_saved" => ['web'],
+
+  /**
+   * Contains the storage of saved route file
+   */
+  "route_storage" => "storage/routes"
 ];

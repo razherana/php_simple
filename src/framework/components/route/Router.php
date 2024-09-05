@@ -34,12 +34,30 @@ class Router extends ConfigurableElement implements Component
 
   public function initialize()
   {
-    $this->request = Request::getFromGlobalVars();
+    $this->request = Request::get_from_global_vars();
 
     /**
      * @var string $path
      */
     $path = ___DIR___ . '/' . $this->read_config('route_dir');
+
+    /** @var string[] */
+    $save_files = $this->read_config('route_saved');
+
+    /** @var string */
+    $route_storage = trim($this->read_config('route_storage'), '/');
+
+    $faster_checking = empty($save_files);
+
+    $full_storage_path = ___DIR___ . '/' . $route_storage;
+
+    // Creates the directory if doesn't exist
+    if (!is_dir($full_storage_path)) {
+      $dir_creation_result = mkdir($full_storage_path, 0777, true);
+
+      if (!$dir_creation_result)
+        throw new RouteFileException("Cannot create the saved route directory in '$full_storage_path' is not a directory");
+    }
 
     /**
      * @var array $files
@@ -48,11 +66,45 @@ class Router extends ConfigurableElement implements Component
 
     // Checks the dir in route config (route_dir) if exist and a directory
     if (!is_dir($path))
-      throw new RouteFileException("The route directory in config : '$path' is not a directory", 1);
+      throw new RouteFileException("The route directory in config : '$path' is not a directory");
 
     // Read all files from the route_files config
     foreach ($files as $file) if (is_file($current_route_file = $path . '/' . $file . '.php')) {
+
+      // Use faster checking to ignore the in_array if the save files is empty 
+      if ($faster_checking || !in_array($file, $save_files)) {
+        include($current_route_file);
+        continue;
+      }
+
+      // Makes the complete path for the current route 
+      $full_storage_route_path = $full_storage_path . "/$file.route_save";
+
+      // Checks if the file exist
+      if (is_file($full_storage_route_path)) {
+        /** @var Route[] */
+        $routes = unserialize(file_get_contents($full_storage_route_path));
+        RouteSave::$all[$file] = $routes;
+        continue;
+      }
+
+      // Includes the route file
       include($current_route_file);
+
+      // Serialize the route file
+      $serialized_route = serialize(RouteSave::$all[$file]);
+
+      // Creates or Override the route file
+      $file = fopen($full_storage_route_path, 'w');
+
+      if (!$file)
+        throw new RouteFileException("Cannot create the save route file");
+
+      // Writes the serialized route
+      fwrite($file, $serialized_route);
+
+      // Closes the file
+      fclose($file);
     }
   }
 

@@ -4,6 +4,7 @@ namespace framework\components\route;
 
 use framework\components\route\closure\ClosureWrapper;
 use framework\components\route\exceptions\RouteException;
+use framework\components\route\exceptions\RouteFileException;
 use framework\components\route\storage\RouteSave;
 use framework\http\handler\BaseController;
 use framework\http\Request;
@@ -64,7 +65,7 @@ class Route
      */
     public $uri = '',
   ) {
-    $this->request = Request::getFromGlobalVars();
+    $this->request = Request::get_from_global_vars();
     $uri = $this->request->request_uri();
 
     $this->save_if_current($uri);
@@ -79,15 +80,19 @@ class Route
    * save if it is
    * @param string $uri
    */
-  private function save_if_current($uri)
+  public function save_if_current($uri)
   {
-    if ($this->testIfCurrent($uri))
+    if ($this->test_if_current($uri))
       RouteSave::$entered = $this;
   }
 
   public function __wakeup()
   {
-    $this->request = Request::getFromGlobalVars();
+    // Set the current request
+    $this->request = Request::get_from_global_vars();
+
+    // Checks when unserializing
+    $this->save_if_current($this->request->request_uri());
   }
 
   /**
@@ -98,7 +103,7 @@ class Route
   {
     $this->rules = array_merge($this->rules, $rules);
 
-    $this->request = Request::getFromGlobalVars();
+    $this->request = Request::get_from_global_vars();
     $uri = $this->request->request_uri();
 
     $this->save_if_current($uri);
@@ -111,11 +116,11 @@ class Route
    * requested by the client
    * @param string $uri
    */
-  public function testIfCurrent($uri): bool
+  public function test_if_current($uri): bool
   {
     // Checks if the route_uri has << >> which means it has route_vars
     if (strpos($this->uri, '<<') !== false && strpos($this->uri, '>>')) {
-      return $this->checkWithVar($uri);
+      return $this->check_with_var($uri);
     }
     return $this->uri == $uri;
   }
@@ -126,7 +131,7 @@ class Route
    * contains variables
    * @param string $uri
    */
-  private function checkWithVar($uri)
+  private function check_with_var($uri)
   {
     // This will be the return value
     $ret = true;
@@ -262,19 +267,31 @@ class Route
   public function save(): void
   {
     // Add it inside an associative array where key = file name
+    $file = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 
-    RouteSave::$all[str_replace(
+    if (!isset($file[0]))
+      throw new RouteFileException("This route save is called from nowhere");
 
-      // Search for route_dir
-      (___DIR___ . '/' . (new Router)->read_config('route_dir')),
+    $file = $file[0]['file'];
 
-      // And replace it with blank, so it removes the route_dir
-      '',
+    RouteSave::$all[
+      // Removes last / or \
+      trim(
+        // Removes the route_dir
+        str_replace(
 
-      // Remove the .php extension
-      substr(__FILE__, strlen(__FILE__) - 4)
+          // Search for route_dir
+          (___DIR___ . '/' . (new Router)->read_config('route_dir')),
 
-    )][] = $this;
+          // And replace it with blank, so it removes the route_dir
+          '',
+
+          // Remove the .php extension
+          substr($file, 0, strlen($file) - 4)
+
+        ),
+        '/\\'
+      )][] = $this;
   }
 
   /**
