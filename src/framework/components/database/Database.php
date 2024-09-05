@@ -18,12 +18,10 @@ class Database extends ConfigurableElement implements Component
     /**
      * Connect to database
      */
-    if ($this->read_config('type') == 'mysql') {
+    if ($this->read_cached_config('type') == 'mysql') {
       MySqlConnection::initialize($this);
     }
   }
 
-  public function execute()
-  {
-  }
+  public function execute() {}
 }

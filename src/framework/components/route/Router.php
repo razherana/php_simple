@@ -39,13 +39,13 @@ class Router extends ConfigurableElement implements Component
     /**
      * @var string $path
      */
-    $path = ___DIR___ . '/' . $this->read_config('route_dir');
+    $path = ___DIR___ . '/' . $this->read_cached_config('route_dir');
 
     /** @var string[] */
-    $save_files = $this->read_config('route_saved');
+    $save_files = $this->read_cached_config('route_saved');
 
     /** @var string */
-    $route_storage = trim($this->read_config('route_storage'), '/');
+    $route_storage = trim($this->read_cached_config('route_storage'), '/');
 
     $faster_checking = empty($save_files);
 
@@ -62,7 +62,7 @@ class Router extends ConfigurableElement implements Component
     /**
      * @var array $files
      */
-    $files = $this->read_config('route_files');
+    $files = $this->read_cached_config('route_files');
 
     // Checks the dir in route config (route_dir) if exist and a directory
     if (!is_dir($path))

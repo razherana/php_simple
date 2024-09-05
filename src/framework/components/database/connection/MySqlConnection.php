@@ -20,7 +20,7 @@ class MySqlConnection extends mysqli
    */
   public static function initialize($database = null)
   {
-    static::$self = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, !is_null($database) ? $database->read_config('port') : null);
+    static::$self = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, !is_null($database) ? $database->read_cached_config('port') : null);
     if (static::$self == false)
       throw new MysqlConnectionException("Connection to database failed");
   }

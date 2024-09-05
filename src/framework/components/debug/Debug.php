@@ -41,8 +41,8 @@ class Debug extends ConfigurableElement implements Component
 
   public function initialize()
   {
-    $this->is_activated = $this->read_config('debug');
-    $this->is_error_exception = $this->read_config('error_exception');
-    $this->is_test = $this->read_config('test_file');
+    $this->is_activated = $this->read_cached_config('debug');
+    $this->is_error_exception = $this->read_cached_config('error_exception');
+    $this->is_test = $this->read_cached_config('test_file');
   }
 }
