@@ -31,7 +31,6 @@ abstract class ConfigurableElement
 
   /**
    * Reads config from cache
-   * @param array<string, mixed> $content
    * @param string $config_name
    */
   public function read_cached_config($config_name)
