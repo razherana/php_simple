@@ -9,6 +9,7 @@ return [
    */
   "sources" => [
     // Default directory
-    "src"
+    "src",
+    "app"
   ]
 ];
