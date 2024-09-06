@@ -6,7 +6,8 @@
  */
 return [
   "all_import" => [
-    "framework/functions/DebugFunctions"
+    "framework/functions/DebugFunctions",
+    "framework/functions/ViewFunctions"
   ],
 
 
