@@ -11,9 +11,9 @@ abstract class ConfigurableElement
 {
   /** 
    * Contains the cached config
-   * @var array<string, mixed> $cached_config
+   * @var array<string, array<string, mixed>> $cached_config
    */
-  protected static $cached_config = null;
+  protected static $cached_config = [];
 
   /**
    * Returns the config file
@@ -35,14 +35,14 @@ abstract class ConfigurableElement
    */
   public function read_cached_config($config_name)
   {
-    if (is_null(static::$cached_config)) {
-      static::$cached_config = ConfigReader::get_all($this->config_file());
+    if (!isset(static::$cached_config[static::class])) {
+      static::$cached_config[static::class] = ConfigReader::get_all($this->config_file());
     }
 
-    $content = static::$cached_config;
+    $content = static::$cached_config[static::class];
 
     if (!isset($content[$config_name])) {
-      throw new UnknownConfigException($config_name, $this->config_file(), $this->config_file());
+      throw new UnknownConfigException($config_name, $this->config_file(), ___DIR___ . ConfigReader::CONFIG_DIRECTORY . $this->config_file() . ".php");
     }
 
     return $content[$config_name];
