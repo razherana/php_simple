@@ -4,6 +4,7 @@ namespace framework\http\handler;
 
 use framework\http\Response;
 use framework\http\Request;
+use framework\view\comm\ViewElement;
 
 class BaseController
 {
@@ -82,19 +83,16 @@ class BaseController
 
   /**
    * Return the Response instance after
-   * @param string $content
+   * @param string|ViewElement $content
    */
   final public function get_response($content)
   {
     $response = $this->response;
 
-    switch ($this->show_method) {
-      case self::JSON_METHOD:
-        $content = json_encode($content);
-        break;
-      case self::VIEW_METHOD:
-        $content = file_get_contents($content);
-    }
+    if ($content instanceof ViewElement)
+      $content = $content->content;
+    elseif ($this->show_method != self::PLAIN_METHOD)
+      $content = json_encode($content);
 
     $response->content = $content;
     $response->headers = $this->headers;
