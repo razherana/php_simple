@@ -79,7 +79,7 @@ abstract class AbstractCompiler
   final protected function compile($contents): string
   {
     // Add the extract in the first line
-    $extract_syntax = "<?php extract(" . View::class . "::\$view_vars['" . $this->view_element->view_name . "']); ?>";
+    $extract_syntax = "<?php extract(" . View::class . "::\$view_vars['" . $this->view_element->view_name . "']->get_data()); ?>";
 
     foreach ($this->get_components() as $component_class) {
 
@@ -193,20 +193,31 @@ abstract class AbstractCompiler
 
     $view_name = $this->view_element->view_name;
 
-    // We compile it
-    if (
-      // If we always compile
-      $view->read_cached_config('always_compile')
-
+    $json_map_file_not_exist = (
       // Or if the file doesn't exist
-      || !$file_exist
+      !$file_exist
 
       // Or if the file exist, we decode the json inside and it doesn't have the view
       || !isset(json_decode(file_get_contents($json_path), true)[$view_name])
+    );
+
+    // If we always compile or the
+    if (
+      $view->read_cached_config('always_compile') || $json_map_file_not_exist
     ) {
       $content = $this->read_file($view_name);
       $content = $this->compile($content);
-      $uniq_id = $this->write_map($view_name);
+
+      // If the file doesn't exist, then we create a map
+      if ($json_map_file_not_exist)
+        $uniq_id = $this->write_map($view_name);
+
+      // Else we just take the value of the existant one
+      else
+        $uniq_id = json_decode(file_get_contents($json_path), true)[$view_name];
+
+
+      // Write the file
       $this->write_compiled($uniq_id, $content);
     }
 
