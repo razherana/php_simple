@@ -25,8 +25,6 @@ class Compilation
 
   protected function load_view()
   {
-    $this->compiler->compile_and_save_content();
-
     $view_var_class = ($this->compiler->get_view_var_class());
 
     // Sets the view var
@@ -34,5 +32,7 @@ class Compilation
 
     // Saves the view var to the View
     View::$view_vars[$this->compiler->view_element->view_name] = $view_var;
+
+    $this->compiler->compile_and_save_content();
   }
 }
