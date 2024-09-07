@@ -17,6 +17,7 @@ class ViewVars
     // Make it able to be constructed from himself
     if ($data instanceof ViewVars) {
       $data = $data->data;
+      unset($data['___vars___']);
     }
 
     $this->data = $data;
