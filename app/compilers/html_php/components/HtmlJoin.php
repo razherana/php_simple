@@ -11,15 +11,15 @@ class HtmlJoin extends Component
     // Checks if this view has a htmljoin component
     $mode = "";
     $uncompiled = $this->get_uncompiled_syntax();
-    if (!preg_match("/" . $this->get_uncompiled_syntax_regex($uncompiled, $mode) . "/$mode", $uncompiled_content)) {
+    if (!preg_match("/" . $this->get_uncompiled_syntax_regex($uncompiled, $mode) . "/s", $uncompiled_content)) {
       return $uncompiled_content;
     }
 
     // The value to insert
     $join = '$___vars___->use_join(); ?>';
 
-    /* number of <?php tags */
-    $open = preg_match_all("/(\<\?php)/", $uncompiled_content);
+    /* number of <?php or < ? or < ?= tags */
+    $open = preg_match_all("/(\<\?php|\<\?|\<\?\=)/", $uncompiled_content);
     /* number of ?> tags */
     $closed = preg_match_all("/(\?\>)/", $uncompiled_content);
 
