@@ -2,6 +2,7 @@
 
 namespace framework\view\compiler\components;
 
+use compilers\html_php\components\HtmlTemplate;
 use compilers\star_php\components\StarBlock;
 use compilers\star_php\components\StarEndBlock;
 use Exception;
@@ -29,26 +30,28 @@ abstract class Component
    * Get the regex format of the uncompiled syntax
    * @return string The uncompiled syntax
    */
-  protected function get_uncompiled_syntax_regex($uncompiled_syntax): string
+  protected function get_uncompiled_syntax_regex($uncompiled_syntax, &$mode): string
   {
-    // Returns the preg_quote if not overrided
-    return preg_quote($uncompiled_syntax);
+    // Uses the preg_quote if not overrided
+    // Replace $ with a regex expression -> (.*) 
+    return str_replace('@', '(\S+)', preg_quote($uncompiled_syntax));
   }
 
   /**
    * @param string $uncompiled_content
    */
-  final public function compile_all($uncompiled_content): string
+  public function compile_all($uncompiled_content): string
   {
     $uncompiled = $this->get_uncompiled_syntax();
 
-    // Replace $ with a regex expression -> (.*) 
-    $uncompiled_regex = str_replace('@', '(.*)', $this->get_uncompiled_syntax_regex($uncompiled), $counts);
+    $mode = "";
+
+    $uncompiled_regex = $this->get_uncompiled_syntax_regex($uncompiled, $mode);
 
     // Initialize all of the datas
     $offset = 0;
     $match = [];
-    $result = preg_match("/$uncompiled_regex/", $uncompiled_content, $match, PREG_OFFSET_CAPTURE, $offset);
+    $result = preg_match("/$uncompiled_regex/" . $mode, $uncompiled_content, $match, PREG_OFFSET_CAPTURE, $offset);
 
     while ($result) {
       // Saves the start of the syntax
@@ -78,7 +81,7 @@ abstract class Component
       $offset = $offset_start + strlen($new_syntax);
 
       // Redo the search
-      $result = preg_match("/$uncompiled_regex/", $uncompiled_content, $match, PREG_OFFSET_CAPTURE, $offset);
+      $result = preg_match("/$uncompiled_regex/" . $mode, $uncompiled_content, $match, PREG_OFFSET_CAPTURE, $offset);
     }
 
     return $uncompiled_content;
