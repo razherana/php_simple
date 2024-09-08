@@ -1,0 +1,6 @@
+<template herana2>
+  <h1>Template herana2 <?= $titre ?></h1>
+</template>
+
+<join test2 vars="['titre' => 'Babakoto']" />
+<?php

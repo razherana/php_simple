@@ -18,7 +18,7 @@ return [
    * Use a saved route file
    * If not exists then use automatically saves it
    */
-  "route_saved" => ['web'],
+  "route_saved" => [],
 
   /**
    * Contains the storage of saved route file
