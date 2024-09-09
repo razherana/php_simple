@@ -10,19 +10,19 @@ class DefaultModelInstance implements ArrayAccess
   /**
    * @var array $attributes
    */
-  private $attributes;
+  private $attributes = [];
 
   /**
    * @var array $originalAttributes
    */
-  private $originalAttributes;
+  private $originalAttributes = [];
 
   public function offsetGet($offset): mixed
   {
-    if(!$this->offsetExists($offset)) {
+    if (!$this->offsetExists($offset)) {
       throw new DefaultException("'$offset' doesn't exist in this ModelInstance");
     }
-    
+
     return $this->attributes[$offset];
   }
 
@@ -33,12 +33,12 @@ class DefaultModelInstance implements ArrayAccess
 
   public function offsetExists($offset): bool
   {
-    return (is_string($offset) || is_int($offset)) && isset($this->attributes[$offset]);
+    return (is_string($offset) || is_int($offset)) && in_array($offset, array_keys($this->attributes ?? []));
   }
 
   public function offsetUnset($offset): void
   {
-    if(!$this->offsetExists($offset)) {
+    if (!$this->offsetExists($offset)) {
       throw new DefaultException("'$offset' doesn't exist in this ModelInstance");
     }
 
