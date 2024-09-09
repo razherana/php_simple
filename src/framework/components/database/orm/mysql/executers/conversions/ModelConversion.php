@@ -37,7 +37,7 @@ class ModelConversion
       /**
        * @var \mysqli_result $this
        */
-      return $res->fetch_array(MYSQLI_ASSOC);
+      return $res->fetch_array(MYSQLI_ASSOC) ?? [];
     }), $type, ...$args);
   }
 
