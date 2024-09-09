@@ -10,6 +10,7 @@ use framework\base\Application;
 use framework\components\database\Database;
 use framework\components\debug\Debug;
 use framework\components\route\Router;
+use framework\components\session\Session;
 
 global $app;
 
@@ -26,7 +27,8 @@ $deb->execute();
 // Add components here
 $components = [
   new Database,
-  new Router
+  new Session,
+  new Router,
 ];
 
 $app->add_component($components);
