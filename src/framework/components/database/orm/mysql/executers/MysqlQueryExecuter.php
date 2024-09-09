@@ -21,12 +21,12 @@ class MysqlQueryExecuter extends ConfigurableElement
    * Executes a query and return the $callable()
    * Then frees the result
    * @param string $q a mysql valid query
-   * @param \Closure $callable A callable binded with the mysqli_result
+   * @param \Closure $callable A callable with the mysqli_result as the argument
    */
-  public static function do_clean($q, $callable) : mixed
+  public static function do_clean($q, $callable): mixed
   {
     $res = self::run($q);
-    
+
     $user_result = $callable($res);
     $res->free();
 
