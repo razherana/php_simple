@@ -6,7 +6,7 @@ use framework\components\database\connection\MySqlConnection;
 
 class MysqlEscaper
 {
-  protected const KEYS = ["NOW(", "DEFAULT"];
+  protected const KEYS = ["NOW(", "DEFAULT", "HEX(", "UNHEX("];
 
   /**
    * Checks if a string is a mysql keyword
