@@ -47,6 +47,6 @@ class UpdateSet implements MysqlElement
 
   public function decode(): string
   {
-    return "UPDATE " . $this->table_name . " SET " . implode(" ", self::clean_values($this->set_values));
+    return "UPDATE " . $this->table_name . " SET " . implode(", ", self::clean_values($this->set_values));
   }
 }
