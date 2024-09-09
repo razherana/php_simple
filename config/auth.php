@@ -30,4 +30,9 @@ return [
   "default_password_verify" => function ($password, $hashed_password) {
     return password_verify($password, $hashed_password);
   },
+
+  /**
+   * This var is the key's name in session
+   */
+  "session_key_name" => "___auth___",
 ];
