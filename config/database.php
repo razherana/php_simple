@@ -13,5 +13,10 @@ return [
   /**
    * Port of the connection (if mysql)
    */
-  "port" => 3306
+  "port" => 3306,
+
+  /**
+   * The charset to use
+   */
+  "charset" => "utf8"
 ];
