@@ -23,6 +23,9 @@ class MySqlConnection extends mysqli
     static::$self = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, !is_null($database) ? $database->read_cached_config('port') : null);
     if (static::$self == false)
       throw new MysqlConnectionException("Connection to database failed");
+
+    // Use the charset
+    static::$self->set_charset($database === null ? "utf8" : $database->read_cached_config('charset'));
   }
 
   public static function get()
