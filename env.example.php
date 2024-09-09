@@ -5,6 +5,10 @@
  */
 define("___DIR___", str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
 
+/**
+ * Hash of the app
+ */
+define('HASH_CODE', "<<hash_code>>");
 
 // Database Connection:
 
