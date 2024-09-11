@@ -52,5 +52,6 @@ return [
    */
   "initialize_session" => [
     SessionManager::class,
+    Auth::class
   ],
 ];
