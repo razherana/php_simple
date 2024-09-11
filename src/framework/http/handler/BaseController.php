@@ -2,6 +2,7 @@
 
 namespace framework\http\handler;
 
+use framework\components\session\SessionManager;
 use framework\http\Response;
 use framework\http\Request;
 use framework\view\comm\ViewElement;
@@ -27,6 +28,12 @@ class BaseController
    * @var Request $request
    */
   public $request;
+
+  /**
+   * Contains a session manager
+   * @var SessionManager $session
+   */
+  public $session;
 
   /**
    * Defines that the show method is 'view'
@@ -77,6 +84,7 @@ class BaseController
    */
   public function __construct($request)
   {
+    $this->session = new SessionManager;
     $this->request = $request;
     $this->response = new Response;
   }
