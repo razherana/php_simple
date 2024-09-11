@@ -5,8 +5,10 @@ namespace framework\components\database\auth;
 use framework\base\config\ConfigurableElement;
 use framework\components\database\auth\exceptions\AuthDefinitionException;
 use framework\components\database\orm\mysql\models\BaseModel;
+use framework\components\session\SessionManager;
+use framework\components\session\interfaces\SessionReservedKeywordsInterface;
 
-class Auth extends ConfigurableElement
+class Auth extends ConfigurableElement implements SessionReservedKeywordsInterface
 {
   /**
    * Contains the model to use
@@ -38,9 +40,22 @@ class Auth extends ConfigurableElement
    */
   protected $password_verify = null;
 
+  /**
+   * Contains the session_manager
+   * @var SessionManager $session
+   */
+  protected $session = null;
+
   public function config_file(): string
   {
     return 'auth';
+  }
+
+  public static function get_session_reserved_keywords(): array
+  {
+    return [
+      (new Auth)->read_config('session_key_name')
+    ];
   }
 
   /**
@@ -59,6 +74,7 @@ class Auth extends ConfigurableElement
     if (!is_a($model, BaseModel::class, true))
       throw new AuthDefinitionException("This class is not a model : " . $model, $this);
 
+    $this->session = new SessionManager;
     $this->model = $model;
 
     if (is_string($id_columns))
@@ -93,5 +109,6 @@ class Auth extends ConfigurableElement
     return new Auth(...$config);
   }
 
-  
+  // Auth functions starts here
+
 }
