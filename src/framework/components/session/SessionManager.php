@@ -18,7 +18,7 @@ class SessionManager implements SessionReservedKeywordsInterface, SessionInitial
    * Contains the content of $_SESSION
    * @var array $session_data
    */
-  protected $session_data;
+  public $session_data;
 
   /**
    * These are the reserved keywords for $_SESSION
