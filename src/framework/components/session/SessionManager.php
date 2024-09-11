@@ -3,10 +3,10 @@
 namespace framework\components\session;
 
 use framework\components\session\exceptions\SessionException;
-use framework\components\session\interfaces\SessionInitialize;
+use framework\components\session\interfaces\SessionInitializeInterface;
 use framework\components\session\interfaces\SessionReservedKeywordsInterface;
 
-class SessionManager implements SessionReservedKeywordsInterface, SessionInitialize
+class SessionManager implements SessionReservedKeywordsInterface, SessionInitializeInterface
 {
   /**
    * If Admin mode is set to true, then no reserved keyword checking is done
