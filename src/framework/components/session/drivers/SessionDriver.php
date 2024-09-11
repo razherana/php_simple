@@ -23,7 +23,7 @@ abstract class SessionDriver implements SessionHandlerInterface
   protected function decrypt($data)
   {
     return openssl_decrypt(
-      gzdecode($data) ,
+      gzdecode($data),
       "AES-256-CBC",
       $this->key,
       0,
