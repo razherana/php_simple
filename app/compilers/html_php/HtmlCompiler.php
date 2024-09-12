@@ -2,6 +2,7 @@
 
 namespace compilers\html_php;
 
+use compilers\html_php\components\HtmlAuth;
 use compilers\html_php\components\HtmlBlock;
 use compilers\html_php\components\HtmlComment;
 use compilers\html_php\components\HtmlElse;
@@ -11,6 +12,7 @@ use compilers\html_php\components\HtmlEndElse;
 use compilers\html_php\components\HtmlEndFor;
 use compilers\html_php\components\HtmlEndIf;
 use compilers\html_php\components\HtmlFor;
+use compilers\html_php\components\HtmlGuest;
 use compilers\html_php\components\HtmlIf;
 use compilers\html_php\components\HtmlInclude;
 use compilers\html_php\components\HtmlJoin;
@@ -37,6 +39,8 @@ class HtmlCompiler extends AbstractCompiler
       HtmlComment::class,
       HtmlIf::class,
       HtmlEndIf::class,
+      HtmlAuth::class,
+      HtmlGuest::class,
       HtmlElseIf::class,
       HtmlElse::class,
       HtmlEndElse::class,
