@@ -3,13 +3,17 @@
 /**
  * Contains auth config
  */
+
+use models\User;
+
 return [
   /**
    * Contains all of the defined auths
    * name_of_auth => [config_of_auth]
    */
   "auths" => [
-    // "name_of_auth" => [Model::class, 'id_column'|['id_column1', 'id_column2', ...], 'pass_column', ?\Closure hash_method, ?\Closure password_verify],
+    // "name_of_auth" => [Model::class, 'id_column'|['id_column1', 'id_column2', ...], 'pass_column', ?\Closure hash_method, ?\Closure password_verify, ?\Closure id_relation],
+    "users" => [User::class, 'name']
   ],
 
   /**
@@ -29,6 +33,15 @@ return [
    */
   "default_password_verify" => function ($password, $hashed_password) {
     return password_verify($password, $hashed_password);
+  },
+
+  /**
+   * This defines the relation between the Model and the id saved,
+   * This closure is binded with the Auth object
+   * @param $id The id saved
+   */
+  "default_id_relation" => function ($id) {
+    return $this->model::find($id);
   },
 
   /**
