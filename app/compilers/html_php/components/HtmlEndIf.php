@@ -32,7 +32,7 @@ class HtmlEndIf extends Component
 
   protected function get_uncompiled_syntax_regex($uncompiled_syntax, &$mode): string
   {
-    return '\<\s*\/\s*(?:if|elseif)(?:\s+(.*?)\s*)?\>';
+    return '\<\s*\/\s*(?:if|elseif|auth|guest)(?:\s+(.*?)\s*)?\>';
   }
 
   protected function get_uncompiled_syntax(): string

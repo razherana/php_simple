@@ -299,6 +299,16 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
   }
 
   /**
+   * Checks if loggedin on this auth
+   * @return bool
+   */
+  public function loggedin(): bool
+  {
+    $auth = $this->session->get($this->read_cached_config("session_key_name"));
+    return in_array($this->name, array_keys($auth));
+  }
+
+  /**
    * Saves the $model_instance into the auth session
    * @param ModelInstance $model_instance The authenticated model
    * @return bool
