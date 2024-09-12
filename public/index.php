@@ -37,5 +37,3 @@ $app->initialize();
 $app->execute();
 
 $EXECUTION_TIME = microtime(true) - $START_TIME;
-
-dd($EXECUTION_TIME);
