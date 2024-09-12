@@ -4,6 +4,8 @@ namespace compilers\html_php;
 
 use compilers\html_php\components\HtmlBlock;
 use compilers\html_php\components\HtmlEndBlock;
+use compilers\html_php\components\HtmlEndFor;
+use compilers\html_php\components\HtmlFor;
 use compilers\html_php\components\HtmlInclude;
 use compilers\html_php\components\HtmlJoin;
 use compilers\html_php\components\HtmlTemplate;
@@ -32,7 +34,9 @@ class HtmlCompiler extends AbstractCompiler
       HtmlInclude::class,
       HtmlTemplate::class,
       HtmlUseTemplate::class,
-      HtmlJoin::class
+      HtmlJoin::class,
+      HtmlFor::class,
+      HtmlEndFor::class,
     ];
   }
 
