@@ -2,11 +2,6 @@
 
 namespace framework\view\compiler\components;
 
-use compilers\html_php\components\HtmlTemplate;
-use compilers\star_php\components\StarBlock;
-use compilers\star_php\components\StarEndBlock;
-use Exception;
-
 /**
  * Represents a block of uncompiled code
  */
@@ -38,6 +33,26 @@ abstract class Component
   }
 
   /**
+   * By default this returns positions of comments
+   * @param string $content The uncompiled content
+   * @return int[]
+   */
+  protected function get_haltcompiled_positions($content): array
+  {
+    $positions = [];
+
+    $regex = $this->get_uncompiled_syntax_regex($this->get_uncompiled_syntax(), $mode);
+
+    // We get every component inside multi-line comments /* */
+    $result = preg_match_all("/\/\*.*($regex).*\*\//s", $content, $matches, PREG_OFFSET_CAPTURE);
+
+    if ($result > 0) foreach ($matches[1] as $match)
+      $positions[] = $match[1];
+
+    return $positions;
+  }
+
+  /**
    * @param string $uncompiled_content
    */
   public function compile_all($uncompiled_content): string
@@ -48,6 +63,8 @@ abstract class Component
 
     $uncompiled_regex = $this->get_uncompiled_syntax_regex($uncompiled, $mode);
 
+    $unavailable_positions = $this->get_haltcompiled_positions($uncompiled_content);
+
     // Initialize all of the datas
     $offset = 0;
     $match = [];
@@ -56,6 +73,21 @@ abstract class Component
     while ($result) {
       // Saves the start of the syntax
       $offset_start = $match[0][1];
+
+      // Checks if this position is valable
+      $is_valable = true;
+
+      foreach ($unavailable_positions as $_position) if ($offset_start == $_position) {
+        $is_valable = false;
+        break;
+      }
+
+      // If not valable, we add the offset to skip this part and redo a search
+      if (!$is_valable) {
+        $offset += strlen($match[0][0]);
+        $result = preg_match("/$uncompiled_regex/" . $mode, $uncompiled_content, $match, PREG_OFFSET_CAPTURE, $offset);
+        continue;
+      }
 
       // Sets the vars
       $vars = $match;
