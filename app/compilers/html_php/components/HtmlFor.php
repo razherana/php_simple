@@ -15,7 +15,7 @@ class HtmlFor extends Component
     $type = $vars[0];
     $content = $vars[1];
 
-    return "<?php $type($content) { ?>";
+    return "<?php $type($content) : ?>";
   }
 
   protected function get_uncompiled_syntax_regex($uncompiled_syntax, &$mode): string

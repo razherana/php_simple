@@ -3,24 +3,17 @@
 namespace compilers\html_php\components;
 
 use framework\view\compiler\components\Component;
-use framework\view\compiler\exceptions\CompilerException;
 
-class HtmlEndFor extends Component
+class HtmlEndElse extends Component
 {
   protected function get_compiled_syntax($vars): string
   {
-    $vars = $vars[0] ?? false;
-
-    if (!in_array($vars, ['foreach', 'for'])) {
-      throw new CompilerException("This is not a valable endfor component : $vars");
-    }
-
-    return "<?php end$vars; ?>";
+    return "<?php endif; ?>";
   }
 
   protected function get_uncompiled_syntax_regex($uncompiled_syntax, &$mode): string
   {
-    return '\<\s*\/\s*(foreach|for)\s*\>';
+    return '\<\/\s*else\s*\>';
   }
 
   protected function get_uncompiled_syntax(): string

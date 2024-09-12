@@ -3,9 +3,15 @@
 namespace compilers\html_php;
 
 use compilers\html_php\components\HtmlBlock;
+use compilers\html_php\components\HtmlComment;
+use compilers\html_php\components\HtmlElse;
+use compilers\html_php\components\HtmlElseIf;
 use compilers\html_php\components\HtmlEndBlock;
+use compilers\html_php\components\HtmlEndElse;
 use compilers\html_php\components\HtmlEndFor;
+use compilers\html_php\components\HtmlEndIf;
 use compilers\html_php\components\HtmlFor;
+use compilers\html_php\components\HtmlIf;
 use compilers\html_php\components\HtmlInclude;
 use compilers\html_php\components\HtmlJoin;
 use compilers\html_php\components\HtmlTemplate;
@@ -28,15 +34,21 @@ class HtmlCompiler extends AbstractCompiler
   protected function get_components(): array
   {
     return [
-      HtmlBlock::class,
-      HtmlEndBlock::class,
-      HtmlUse::class,
-      HtmlInclude::class,
-      HtmlTemplate::class,
-      HtmlUseTemplate::class,
-      HtmlJoin::class,
+      HtmlComment::class,
+      HtmlIf::class,
+      HtmlEndIf::class,
+      HtmlElseIf::class,
+      HtmlElse::class,
+      HtmlEndElse::class,
       HtmlFor::class,
       HtmlEndFor::class,
+      HtmlUse::class,
+      HtmlUseTemplate::class,
+      HtmlInclude::class,
+      HtmlJoin::class,
+      HtmlBlock::class,
+      HtmlEndBlock::class,
+      HtmlTemplate::class,
     ];
   }
 

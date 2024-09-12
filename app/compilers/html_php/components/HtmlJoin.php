@@ -9,27 +9,29 @@ class HtmlJoin extends Component
   public function compile_all($uncompiled_content): string
   {
     // Checks if this view has a htmljoin component
-    $mode = "";
-    $uncompiled = $this->get_uncompiled_syntax();
-    if (!preg_match("/" . $this->get_uncompiled_syntax_regex($uncompiled, $mode) . "/s", $uncompiled_content)) {
-      return $uncompiled_content;
+    $compiled = parent::compile_all($uncompiled_content);
+
+    // If the compiled != uncompiled, then a join has been found
+    // We check the strlen first to minimize calculations
+    if (strlen($compiled) == strlen($uncompiled_content) && $compiled == $uncompiled_content) {
+      return $compiled;
     }
 
     // The value to insert
     $join = '$___vars___->use_join(); ?>';
 
     /* number of <?php or < ? or < ?= tags */
-    $open = preg_match_all("/(\<\?php|\<\?|\<\?\=)/", $uncompiled_content);
+    $open = preg_match_all("/(\<\?php|\<\?|\<\?\=)/", $compiled);
     /* number of ?> tags */
-    $closed = preg_match_all("/(\?\>)/", $uncompiled_content);
+    $closed = preg_match_all("/(\?\>)/", $compiled);
 
     // Append the value
-    $uncompiled_content .=
+    $compiled .=
       // If open > closed, there is an open php tag without a closing one so we add a closing tag
       ($open > $closed ? " ?>" : "")
       . "<?php $join";
 
-    return parent::compile_all($uncompiled_content);
+    return $compiled;
   }
 
   protected function get_uncompiled_syntax(): string
