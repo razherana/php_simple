@@ -136,7 +136,7 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
    * @param string $name_of_auth
    * @return self The Auth instance
    */
-  public static function from_config($name_of_auth) : self
+  public static function from_config($name_of_auth): self
   {
     $auths = (new Auth)->read_config('auths');
 
@@ -227,7 +227,7 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
   /**
    * Removes the login of the auth
    */
-  public function logout() : bool
+  public function logout(): bool
   {
     $auth = $this->session->get($this->read_cached_config("session_key_name"));
     unset($auth[$this->name]);
@@ -239,7 +239,7 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
    * Register a new element with password hashed
    * @param array<string, string> $data
    */
-  public function register($data) : bool
+  public function register($data): bool
   {
     // Hash the pass column
     if (!is_null($this->pass_column)) {
@@ -338,7 +338,7 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
       return $this::$cached_models[$this->name];
 
     // Sets and returns the model
-    return ($this::$cached_models[$this->name] = ($this->id_relation)($this->id()));
+    return ($this::$cached_models[$this->name] = ($this->id_relation)->call($this, $this->id()));
   }
 
   /**
