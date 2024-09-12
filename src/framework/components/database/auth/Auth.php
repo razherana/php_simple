@@ -52,6 +52,18 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
   protected $password_verify = null;
 
   /**
+   * Contains the closure to get the model in relation with the id
+   * @var \Closure $id_relation
+   */
+  protected $id_relation = null;
+
+  /**
+   * Contains cached models after getting them
+   * @var array<string, mixed> $cached_models
+   */
+  protected static $cached_models = [];
+
+  /**
    * Contains the session_manager
    * @var SessionManager $session
    */
@@ -86,9 +98,10 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
    * @param ?string $pass_column
    * @param ?\Closure $hash_method
    * @param ?\Closure $password_verify
+   * @param ?\Closure $id_relation
    * @return self
    */
-  public function __construct($name = "ignore", $model = "ignore", $id_columns = null, $pass_column = null, $hash_method = null, $password_verify = null)
+  public function __construct($name = "ignore", $model = "ignore", $id_columns = null, $pass_column = null, $hash_method = null, $password_verify = null, $id_relation = null)
   {
     if ($model === "ignore" || $name === "ignore") return;
 
@@ -106,6 +119,10 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
     $this->pass_column = $pass_column;
     $this->hash_method = $hash_method;
     $this->password_verify = $password_verify;
+    $this->id_relation = $id_relation;
+
+    if ($this->id_relation === null)
+      $this->id_relation = $this->read_cached_config('default_id_relation');
 
     if ($this->hash_method === null)
       $this->hash_method = $this->read_cached_config('default_hash_method');
@@ -119,7 +136,7 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
    * @param string $name_of_auth
    * @return self The Auth instance
    */
-  public static function from_config($name_of_auth)
+  public static function from_config($name_of_auth) : self
   {
     $auths = (new Auth)->read_config('auths');
 
@@ -209,9 +226,8 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
 
   /**
    * Removes the login of the auth
-   * @return bool
    */
-  public function logout()
+  public function logout() : bool
   {
     $auth = $this->session->get($this->read_cached_config("session_key_name"));
     unset($auth[$this->name]);
@@ -222,9 +238,8 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
   /**
    * Register a new element with password hashed
    * @param array<string, string> $data
-   * @return bool
    */
-  public function register($data)
+  public function register($data) : bool
   {
     // Hash the pass column
     if (!is_null($this->pass_column)) {
@@ -241,7 +256,7 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
    * Force login with an id
    * @param mixed $id
    */
-  public function force_login_id($id)
+  public function force_login_id($id): bool
   {
     $auth = $this->session->get($this->read_cached_config("session_key_name"));
     $auth[$this->name] = $id;
@@ -253,7 +268,7 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
    * Force login with id_columns
    * @param array<string, string> $id_columns
    */
-  public function force_login($id_columns)
+  public function force_login($id_columns): bool
   {
     $id = $id_columns;
 
@@ -309,11 +324,42 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
   }
 
   /**
+   * Get the model instance in relation to the id saved
+   * If not logged in, this throws an exception
+   * @return mixed The model
+   */
+  public function get(): mixed
+  {
+    if (!$this->loggedin())
+      throw new AuthException("Cannot get the model because there is no loggedin");
+
+    // If already cached then send the cached one
+    if (in_array($this->name, array_keys($this::$cached_models)))
+      return $this::$cached_models[$this->name];
+
+    // Sets and returns the model
+    return ($this::$cached_models[$this->name] = ($this->id_relation)($this->id()));
+  }
+
+  /**
+   * Get the id saved inside session
+   * Throws an exception if not loggedin
+   * @return mixed The id
+   */
+  public function id(): mixed
+  {
+    if (!$this->loggedin())
+      throw new AuthException("Cannot get the model because there is no loggedin");
+
+    return $this->session->get($this->read_cached_config("session_key_name"))[$this->name];
+  }
+
+  /**
    * Saves the $model_instance into the auth session
    * @param ModelInstance $model_instance The authenticated model
    * @return bool
    */
-  protected function save($model_instance)
+  protected function save($model_instance): bool
   {
     $key = $model_instance[$model_instance->parent_model::$primary_key];
 
