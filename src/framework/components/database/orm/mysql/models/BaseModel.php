@@ -4,6 +4,7 @@ namespace framework\components\database\orm\mysql\models;
 
 use framework\components\database\orm\mysql\executers\conversions\ModelConversion;
 use framework\components\database\orm\mysql\executers\MysqlQueryExecuter;
+use framework\components\database\orm\mysql\models\exceptions\DefaultModelException;
 use framework\components\database\orm\mysql\models\exceptions\ModelDefinitionException;
 use framework\components\database\orm\mysql\models\relations\traits\RelationTrait;
 use framework\components\database\orm\mysql\queries\SortedQueryMaker;
@@ -13,6 +14,7 @@ use framework\components\database\orm\mysql\traits\RawTrait;
 use framework\components\database\orm\mysql\traits\SelectTrait;
 use framework\components\database\orm\mysql\traits\WhereTrait;
 use framework\components\database\orm\mysql\models\instances\DescribedColumn;
+use framework\components\database\orm\mysql\models\instances\ModelInstance;
 use framework\components\database\orm\mysql\request\elements\Select;
 use ReflectionClass;
 
@@ -181,6 +183,22 @@ abstract class BaseModel extends SortedQueryMaker
     $query = SortedQueryMaker::insert_into(static::$table, $datas);
     return MysqlQueryExecuter::run($query->decode_query());
   }
+
+  /**
+   * Find the element via it's primary key
+   * @param mixed $id
+   * @return ?ModelInstance The model or null if the it doesn't exist
+   */
+  public static function find($id)
+  {
+    $array = (new static)->where(static::$primary_key, '=', $id)->get();
+
+    if (count($array) > 1)
+      throw new DefaultModelException("After querying, this table has multiple model with same primary_keys, " . print_r($array, true));
+
+    return count($array) <= 0 ? null : $array[array_keys($array)[0]];
+  }
+
 
   /**
    * Filter datas through fillable and non_fillable
