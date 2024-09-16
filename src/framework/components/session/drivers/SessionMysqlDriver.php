@@ -27,14 +27,8 @@ class SessionMysqlDriver extends SessionDriver
 
   public function open(string $path, string $name): bool
   {
-    return MysqlQueryExecuter::run(
-      str_replace(
-        '<<session>>',
-        $this->session_table,
-        $this->session_query_create
-      )
-    );
-    // TODO: Add this in migrations etc
+    // The table creation is set during the mysql_run
+    return true;
   }
 
   public function close(): bool
