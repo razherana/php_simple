@@ -35,14 +35,15 @@ class ArrayValidation implements Validator
    * @param array $data
    * @param Rule[] $rules
    */
-  public function __construct($data, $rules)
+  public function __construct($data, $rules, $clone = false)
   {
     $this->data = $data;
     $new_rules = [];
 
     foreach ($rules as $rule) {
       // Clone the rule so it's not modified when saving the route in storage
-      $rule = clone $rule;
+      if ($clone)
+        $rule = clone $rule;
 
       // Sets the content_name to the content
       $rule->content_name = $rule->content;
@@ -51,10 +52,11 @@ class ArrayValidation implements Validator
       $rule->content = $data[$rule->content_name] ?? null;
 
       // Adds the cloned rule to new_rules
-      $new_rules[] = $rule;
+      if ($clone)
+        $new_rules[] = $rule;
     }
 
-    $this->rules = $new_rules;
+    $this->rules = $clone ? $new_rules : $rules;
   }
 
   /**
@@ -62,9 +64,9 @@ class ArrayValidation implements Validator
    * @param array $data
    * @param Rule[] $rules
    */
-  public static function from($data, $rules)
+  public static function from($data, $rules, $clone = false)
   {
-    return new self($data, $rules);
+    return new self($data, $rules, $clone);
   }
 
   public function validate(): bool
