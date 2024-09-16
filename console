@@ -2,6 +2,8 @@
 
 use framework\base\Application;
 use framework\components\console\Console;
+use framework\components\database\Database;
+use framework\http\Request;
 
 require_once(__DIR__ . '/env.php');
 require_once(___DIR___ . '/src/autoloader.php');
@@ -9,9 +11,13 @@ require_once(___DIR___ . '/src/function_autoloader.php');
 
 $app = Application::get();
 
-$app->add_component(
+// For the cli app
+Request::$ignore = true;
+
+$app->add_component([
+  new Database,
   new Console($argv)
-);
+]);
 
 $app->initialize();
 $app->execute();
