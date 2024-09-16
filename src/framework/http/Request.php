@@ -15,6 +15,12 @@ class Request
   private $request_uri;
 
   /**
+   * Contains parent folder, made it static to cache the value
+   * @var ?string $parent_folder
+   */
+  public static $parent_folder = null;
+
+  /**
    * This method returns the $request_uri
    * @return string
    */
@@ -61,6 +67,28 @@ class Request
       throw new Exception("This server is inside a sub-folder, please set 'sub_folder' in config/app.php to true", 1);
 
     $this->request_uri = strtok($uri, '?');
+
+    if (!$this::$parent_folder)
+      $this::$parent_folder = $this->get_parent_uri();
+  }
+
+  /**
+   * Get the parent folders of the application
+   * If not a subfolder app then /, else some string handling is done
+   * @return string
+   */
+  public function get_parent_uri()
+  {
+    if (ConfigReader::get('app', 'sub_folder') !== true)
+      return '/';
+
+    // From the server root 'localhost/__/__/public/index.php'
+
+    $script_name = $this->server['SCRIPT_NAME'];
+
+    $public_folder = ConfigReader::get('app', 'public_folder') ?? 'public';
+
+    return str_replace("$public_folder/index.php", '', $script_name);
   }
 
   public function __construct(
