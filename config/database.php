@@ -18,5 +18,12 @@ return [
   /**
    * The charset to use
    */
-  "charset" => "utf8"
+  "charset" => "utf8",
+
+  /**
+   * Sql file to imports to database
+   */
+  "imports" => [
+    "script.sql"
+  ]
 ];
