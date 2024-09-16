@@ -7,7 +7,7 @@ return [
   /**
    * set to true if the application is inside a sub-folder
    */
-  "sub_folder" => false,
+  "sub_folder" => true,
 
   /**
    * public folder's name
