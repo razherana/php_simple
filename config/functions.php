@@ -9,6 +9,7 @@ return [
     "framework/functions/DebugFunctions",
     "framework/functions/ViewFunctions",
     "framework/functions/AuthFunctions",
+    "framework/functions/HelperFunctions",
   ],
 
 
