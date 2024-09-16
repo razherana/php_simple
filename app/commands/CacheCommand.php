@@ -50,7 +50,7 @@ class CacheCommand extends ConsoleCommand
     }
   }
 
-  protected function clear_route()
+  public function clear_route()
   {
     foreach (
       array_diff(
