@@ -31,7 +31,20 @@ class MakeCommand extends ConsoleCommand
         case "-c":
           $this->controller($other);
           break;
+        case "-env":
+          $this->reset_env();
+          break;
       }
+  }
+
+  protected function reset_env()
+  {
+    $content = file_get_contents(___DIR___ . "/env.example.php");
+    $hash = base64_encode(random_bytes(4096));
+
+    $content = str_replace('<<hash_code>>', $hash, $content);
+
+    file_put_contents(___DIR___ . "/env.php", $content);
   }
 
   protected function controller($other)
@@ -78,6 +91,6 @@ class MakeCommand extends ConsoleCommand
 
   public function help(): string
   {
-    return "Make a new element\nAvailable parameters : \n\t-m !model_name! !model_table! !primary_key!\n\t-c !controller_name!";
+    return "Make a new element\nAvailable parameters : \n\t-m !model_name! !model_table! !primary_key!\n\t-c !controller_name!\n\t-env Resets the env.php var";
   }
 }
