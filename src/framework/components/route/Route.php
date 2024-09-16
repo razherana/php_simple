@@ -183,7 +183,7 @@ class Route
     // Checks that the route_vars and request_uri correlate before validating
     // Faster check
     if ($ret === true)
-      $ret = ArrayValidation::from($this->vars, $this->rules)->validate();
+      $ret = ArrayValidation::from($this->vars, $this->rules, true)->validate();
 
     // Checks if the route entered is $this but after checking it isn't
     if (RouteSave::$entered === $this && $ret === false) RouteSave::$entered = null;
