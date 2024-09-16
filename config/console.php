@@ -7,6 +7,7 @@
 use commands\CacheCommand;
 use commands\ExitCommand;
 use commands\HelpCommand;
+use commands\RunCommand;
 
 return [
   /**
@@ -22,5 +23,6 @@ return [
     ExitCommand::class,
     HelpCommand::class,
     CacheCommand::class,
+    RunCommand::class,
   ],
 ];
