@@ -61,6 +61,7 @@ class BaseController
   public function json()
   {
     $this->show_method = self::JSON_METHOD;
+    $this->headers['Content-Type'] = "json";
   }
 
   /**
@@ -69,6 +70,7 @@ class BaseController
   public function plain()
   {
     $this->show_method = self::PLAIN_METHOD;
+    $this->headers['Content-Type'] = "text";
   }
 
   /**
