@@ -17,9 +17,7 @@ final class Application
    */
   private static self $application;
 
-  private function __construct()
-  {
-  }
+  private function __construct() {}
 
   public static function get(): self
   {
@@ -32,11 +30,11 @@ final class Application
    */
   public function add_component($component): void
   {
-    if ($component instanceof Component)
+    if (is_object($component) && in_array(Component::class, class_implements($component)))
       $this->components[] = $component;
 
-    if (is_array($component)) foreach ($component as $c) {
-      if ($c instanceof Component)
+    elseif (is_array($component)) foreach ($component as $c) {
+      if (in_array(Component::class, class_implements($c)))
         $this->components[] = $c;
       else
         throw new BadMethodCallException("The argument inside the array of Component" . $c::class . " is not a component", 1);
