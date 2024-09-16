@@ -7,6 +7,7 @@
 use commands\CacheCommand;
 use commands\ExitCommand;
 use commands\HelpCommand;
+use commands\ListCommand;
 use commands\MakeCommand;
 use commands\RunCommand;
 
@@ -26,5 +27,6 @@ return [
     CacheCommand::class,
     RunCommand::class,
     MakeCommand::class,
+    ListCommand::class,
   ],
 ];
