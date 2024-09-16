@@ -222,7 +222,7 @@ class Rule
    */
   public function other($callback, $name = 'other')
   {
-    $this->rules[self::OTHER][$name] = $callback->bindTo($this, static::class);
+    $this->rules[self::OTHER][$name] = $callback;
     return $this;
   }
 }

@@ -26,6 +26,12 @@ class ArrayValidation implements Validator
   private $content;
 
   /**
+   * Changes every rule
+   * @var Rule $rule
+   */
+  private $rule;
+
+  /**
    * Contains all the rules
    * @var Rule[] $rules
    */
@@ -73,6 +79,7 @@ class ArrayValidation implements Validator
   {
     foreach ($this->rules as $rule) {
       $this->content = $this->data[$rule->content_name] ?? false;
+      $this->rule = $rule;
       foreach ($rule->rules as $k => $v) {
         switch ($k) {
           case Rule::REQUIRED:
@@ -240,7 +247,7 @@ class ArrayValidation implements Validator
     $errors = [];
 
     foreach ($all_callbacks as $name => $closure)
-      if (!$closure()) {
+      if (!$closure->call($this->rule)) {
         $errors[$name] = false;
       }
 
