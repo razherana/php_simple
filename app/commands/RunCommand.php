@@ -6,6 +6,7 @@ use framework\components\console\ConsoleCommand;
 use framework\components\database\Database;
 use framework\components\database\orm\mysql\executers\MysqlQueryExecuter;
 use framework\components\route\Router;
+use framework\components\session\Session;
 
 class RunCommand extends ConsoleCommand
 {
@@ -52,6 +53,16 @@ class RunCommand extends ConsoleCommand
           $code,
         );
     }
+
+    // Run the session query
+    $session = (new Session);
+    $query = $session->read_cached_config('mysql_structure');
+    $query = str_replace('<<session>>', $session->read_cached_config('mysql_table'), $query);
+
+    MysqlQueryExecuter::run(
+      // We use the sql script
+      $query,
+    );
   }
 
   public function help(): string
