@@ -20,14 +20,24 @@ class Request
    */
   public function request_uri(): string
   {
-    return $this->request_uri;
+    // Added ?? '' because when it may be null in php cli 
+    return $this->request_uri ?? '';
   }
+
+  /**
+   * When setted to true, this will ignore all checking in default request
+   * Typically useful in cli php
+   * @var bool $ignore
+   */
+  public static $ignore = false;
 
   /**
    * Initializes the request_uri
    */
   private function set_request_uri()
   {
+    if (self::$ignore) return;
+
     $uri = urldecode($this->server['REQUEST_URI']);
 
     if (ConfigReader::get('app', 'sub_folder') === true) {
