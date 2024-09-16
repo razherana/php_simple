@@ -2,6 +2,7 @@
 
 namespace framework\components\console;
 
+use commands\ListCommand;
 use framework\base\Component;
 use framework\base\config\ConfigurableElement;
 use framework\components\console\exceptions\ConsoleCommandNotFoundException;
@@ -94,10 +95,7 @@ class Console extends ConfigurableElement implements Component
       }
 
       if ($found === false) {
-        echo "Command not found: `" . implode(' ', $commands) . "`\nAvailable commands : \n";
-
-        foreach ($this->commands as $command)
-          echo "  - " . (new $command)->get() . "\n";
+        (new ListCommand)->execute([]);
       }
     }
   }
