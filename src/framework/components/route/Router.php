@@ -36,9 +36,7 @@ class Router extends ConfigurableElement implements Component
   {
     $this->request = Request::get_from_global_vars();
 
-    /**
-     * @var string $path
-     */
+    /** @var string $path */
     $path = ___DIR___ . '/' . $this->read_cached_config('route_dir');
 
     /** @var string[] */
@@ -59,9 +57,7 @@ class Router extends ConfigurableElement implements Component
         throw new RouteFileException("Cannot create the saved route directory in '$full_storage_path' is not a directory");
     }
 
-    /**
-     * @var array $files
-     */
+    /** @var array $files */
     $files = $this->read_cached_config('route_files');
 
     // Checks the dir in route config (route_dir) if exist and a directory
@@ -94,17 +90,9 @@ class Router extends ConfigurableElement implements Component
       // Serialize the route file
       $serialized_route = serialize(RouteSave::$all[$file]);
 
-      // Creates or Override the route file
-      $file = fopen($full_storage_route_path, 'w');
-
-      if (!$file)
+      // Write the route content
+      if (file_put_contents($full_storage_route_path, $serialized_route) === false)
         throw new RouteFileException("Cannot create the save route file");
-
-      // Writes the serialized route
-      fwrite($file, $serialized_route);
-
-      // Closes the file
-      fclose($file);
     }
   }
 
