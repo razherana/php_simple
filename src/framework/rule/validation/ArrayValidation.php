@@ -38,13 +38,23 @@ class ArrayValidation implements Validator
   public function __construct($data, $rules)
   {
     $this->data = $data;
+    $new_rules = [];
 
     foreach ($rules as $rule) {
+      // Clone the rule so it's not modified when saving the route in storage
+      $rule = clone $rule;
+
+      // Sets the content_name to the content
       $rule->content_name = $rule->content;
+
+      // Sets the content to the content in the array data
       $rule->content = $data[$rule->content_name] ?? null;
+
+      // Adds the cloned rule to new_rules
+      $new_rules[] = $rule;
     }
 
-    $this->rules = $rules;
+    $this->rules = $new_rules;
   }
 
   /**
