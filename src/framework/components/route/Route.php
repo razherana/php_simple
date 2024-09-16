@@ -192,6 +192,40 @@ class Route
   }
 
   /**
+   * Generate uri from this route
+   * @return string
+   */
+  public function generate_uri($args = [])
+  {
+    $uri_route = $this->uri;
+    $url_vars = [];
+
+    if (preg_match_all('/\\<\\<(.*?)\\>\\>/', $uri_route, $matches))
+      foreach ($matches[0] as $match) {
+        $match = trim($match, '<>');
+
+        if (!isset($args[$match])) {
+          throw new RouteException("This route needs the required parameter : '$match'");
+        }
+
+        $uri_route = str_replace("<<$match>>", urlencode($args[$match]), $uri_route);
+
+        $url_vars[] = $match;
+      }
+
+    foreach ($url_vars as $v)
+      unset($args[$v]);
+
+    foreach ($args as $k => $v)
+      $args[$k] = urlencode($k) . "=" . urlencode($v);
+
+    return $uri_route .
+      (!empty($args) ?
+        ("?" . implode('&', $args)) : ''
+      );
+  }
+
+  /**
    * Declare a new GET route
    * @param string $uri
    * @param array<Controller::class, string>|callable $callback
