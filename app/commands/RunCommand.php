@@ -48,10 +48,12 @@ class RunCommand extends ConsoleCommand
       $file_content = file_get_contents(___DIR___ . "/database/$import");
 
       foreach (explode(';', $file_content) as $code)
-        MysqlQueryExecuter::run(
-          // We use the sql script
-          $code,
-        );
+        // We check if the query is empty
+        if (trim(trim($code), ' ') != "")
+          MysqlQueryExecuter::run(
+            // We use the sql script
+            $code,
+          );
     }
 
     // Run the session query
