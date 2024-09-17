@@ -34,7 +34,25 @@ class MakeCommand extends ConsoleCommand
         case "-env":
           $this->reset_env();
           break;
+        case "-mid":
+          $this->middleware($other);
+          break;
       }
+  }
+
+  public function middleware($other)
+  {
+    if (!isset($other[0]))
+      throw new ConsoleExecutionException("Missing middleware's name");
+
+    $middleware_name = $other[0];
+
+    $content = file_get_contents(ConfigReader::get('template', 'middleware'));
+    $content = str_replace("template_middleware_name", $middleware_name, $content);
+
+    if (!is_dir($dir = ___DIR___ . "/app/http/middlewares"))
+      mkdir($dir, 0777, true);
+    file_put_contents("$dir/$middleware_name.php", $content);
   }
 
   public function reset_env()
@@ -91,6 +109,6 @@ class MakeCommand extends ConsoleCommand
 
   public function help(): string
   {
-    return "Make a new element\nAvailable parameters : \n\t-m !model_name! !model_table! !primary_key!\n\t-c !controller_name!\n\t-env Resets the env.php var";
+    return "Make a new element\nAvailable parameters : \n\t-m !model_name! !model_table! !primary_key!\n\t-c !controller_name!\n\t-env Resets the env.php var\n\t-mid !middleware_name!";
   }
 }
