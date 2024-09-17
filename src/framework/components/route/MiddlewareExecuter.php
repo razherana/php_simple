@@ -47,6 +47,13 @@ class MiddlewareExecuter extends ConfigurableElement
       );
 
     foreach ($middlewares as $middleware) {
+      preg_match("/(\\w+)(?:\:(.*))?/", $middleware, $args);
+
+      $middleware = $args[1];
+
+      if (count($args) >= 3)
+        $args = explode(',', $args[2]);
+
       if (!isset($all_middleware[$middleware]))
         throw new MiddlewareExecuterException("This middleware doesn't have an alias : '$middleware'");
 
@@ -55,7 +62,7 @@ class MiddlewareExecuter extends ConfigurableElement
       if (!is_a($middleware_class, BaseMiddleware::class, true))
         throw new MiddlewareExecuterException("The middleware given is not a Middleware class but a '" . $middleware_class . "'");
 
-      $middlewares_instances[$middleware] = $middleware_class;
+      $middlewares_instances[$middleware] = [$middleware_class, $args];
     }
 
     $this->middlewares = $middlewares_instances;
@@ -76,7 +83,7 @@ class MiddlewareExecuter extends ConfigurableElement
 
     foreach ($this->middlewares as $middleware_class) {
       /** @var BaseMiddleware $middleware */
-      $middleware = new $middleware_class($this->request);
+      $middleware = new $middleware_class[0]($this->request, ...($middleware_class[1] ?? []));
 
       if ($middleware->checks()) {
         $middleware->execute();
