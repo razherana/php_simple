@@ -53,6 +53,8 @@ class MiddlewareExecuter extends ConfigurableElement
 
       if (count($args) >= 3)
         $args = explode(',', $args[2]);
+      else
+        $args = [];
 
       if (!isset($all_middleware[$middleware]))
         throw new MiddlewareExecuterException("This middleware doesn't have an alias : '$middleware'");
