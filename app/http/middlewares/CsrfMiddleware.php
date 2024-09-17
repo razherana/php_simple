@@ -21,6 +21,6 @@ class CsrfMiddleware extends BaseMiddleware
 
   public function execute(): void
   {
-    Response::abort(501);
+    Response::abort(300);
   }
 }
