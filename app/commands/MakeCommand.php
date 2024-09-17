@@ -37,7 +37,7 @@ class MakeCommand extends ConsoleCommand
       }
   }
 
-  protected function reset_env()
+  public function reset_env()
   {
     $content = file_get_contents(___DIR___ . "/env.example.php");
     $hash = base64_encode(random_bytes(4096));

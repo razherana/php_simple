@@ -1,13 +1,38 @@
 <?php
 
+use commands\MakeCommand;
 use framework\base\Application;
 use framework\components\console\Console;
 use framework\components\database\Database;
 use framework\http\Request;
 
-require_once(__DIR__ . '/env.php');
+// If the env exists we require it
+if (is_file($env = __DIR__ . '/env.php')) {
+  require_once($env);
+
+  // Sets the init_env to false
+  $init_env = false;
+} else {
+  // Else we notice user
+  echo "The env is not set, setting automatically\nMake sure to properly change the values in env.php";
+
+  // Require the env.example.php
+  require_once(__DIR__ . '/env.example.php');
+
+  // Sets the init_env to true
+  $init_env = true;
+}
+
 require_once(___DIR___ . '/src/autoloader.php');
 require_once(___DIR___ . '/src/function_autoloader.php');
+
+if ($init_env) {
+  // Then we execute the reset_env method
+  (new MakeCommand)->reset_env();
+
+  // And we exit
+  exit;
+}
 
 $app = Application::get();
 
