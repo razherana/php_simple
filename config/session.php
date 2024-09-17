@@ -6,6 +6,7 @@
 
 use framework\components\database\auth\Auth;
 use framework\components\session\SessionManager;
+use framework\http\Csrf;
 
 return [
   /**
@@ -35,7 +36,8 @@ return [
    */
   "reserved_keywords" => [
     SessionManager::class,
-    Auth::class
+    Auth::class,
+    Csrf::class,
   ],
 
   /**
@@ -52,6 +54,7 @@ return [
    */
   "initialize_session" => [
     SessionManager::class,
-    Auth::class
+    Auth::class,
+    Csrf::class,
   ],
 ];
