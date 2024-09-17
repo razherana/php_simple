@@ -9,6 +9,9 @@ use framework\http\Request;
  */
 abstract class BaseMiddleware
 {
+  /**
+   * @var Request $request
+   */
   public $request;
 
   /** @param Request $request */
