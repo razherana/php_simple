@@ -2,6 +2,8 @@
 
 namespace framework\http;
 
+use framework\base\exceptions\DefaultException;
+
 class Response
 {
   /**
@@ -28,6 +30,17 @@ class Response
     $this->content = $content;
     $this->status_code = $status_code;
     $this->headers = $headers;
+  }
+
+  /**
+   * @param string $url A normalized url
+   */
+  public static function redirect($url)
+  {
+    if (headers_sent())
+      throw new DefaultException("Cannot redirect after the headers being sent");
+    header("Location: $url");
+    exit;
   }
 
   /**
