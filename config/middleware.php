@@ -1,5 +1,6 @@
 <?php
 
+use http\middlewares\AuthMiddleware;
 use http\middlewares\CsrfMiddleware;
 
 /**
@@ -11,7 +12,8 @@ return [
    */
   "aliases" => [
     // "some_middleware_alias_to_use" => SomeMiddleware::class
-    "csrf" => CsrfMiddleware::class
+    "csrf" => CsrfMiddleware::class,
+    "auth" => AuthMiddleware::class,
   ],
 
   /**
