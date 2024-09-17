@@ -27,6 +27,10 @@ class Router extends ConfigurableElement implements Component
 
     $route = RouteSave::$entered;
 
+    $middleware = new MiddlewareExecuter($route->middlewares, $this->request);
+
+    $middleware->execute();
+
     $response = $route->run_callback();
 
     return $response->send();
