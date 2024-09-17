@@ -2,7 +2,7 @@
 
 namespace framework\rule;
 
-use framework\rule\validation\OneValidation;
+use framework\components\route\closure\ClosureWrapper;
 
 class Rule
 {
@@ -150,30 +150,8 @@ class Rule
    */
   public function inner_checking($callable_for_value, $callable_for_rule)
   {
-    // $callable_for_value = $callable_for_value->bindTo($this, static::class);
-
-    // $value = $callable_for_value();
-
-    // $new_rule = (new OneValidation($value));
-
-    // $callable_for_rule = $callable_for_rule->bindTo($new_rule, static::class);
-
-    // $callable_for_rule();
-
-    // if (!isset($this->rules[self::INNER_CHECKING]))
-    //   $this->rules[self::INNER_CHECKING] = [];
-
-    // if (!isset($this->rules[self::INNER_CHECKING][$value]))
-    //   $this->rules[self::INNER_CHECKING][$value] = [];
-
-    // $this->rules[self::INNER_CHECKING][$value] += $new_rule->rules;
-
     $callable_for_value = $callable_for_value->bindTo($this, static::class);
     $this->rules[self::INNER_CHECKING][] = [$callable_for_value, $callable_for_rule];
-    // $value = $callable_for_value();
-    // $new_rule = (new OneValidation($value));
-    // $callable_for_rule = $callable_for_rule->bindTo($new_rule, static::class);
-
     return $this;
   }
 
@@ -224,5 +202,18 @@ class Rule
   {
     $this->rules[self::OTHER][$name] = $callback;
     return $this;
+  }
+
+  public function __sleep()
+  {
+    if (!empty($this->rules[self::OTHER])) foreach ($this->rules[self::OTHER] as $k => $v)
+      $this->rules[self::OTHER][$k] = ClosureWrapper::from($v);
+    return array_keys(get_class_vars(static::class));
+  }
+
+  public function __wakeup()
+  {
+    if (!empty($this->rules[self::OTHER])) foreach ($this->rules[self::OTHER] as $k => $v)
+      $this->rules[self::OTHER][$k] = $v->get_closure();
   }
 }
