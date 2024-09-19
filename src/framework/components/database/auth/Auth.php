@@ -77,13 +77,13 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
   public static function get_session_reserved_keywords(): array
   {
     return [
-      (new Auth)->read_config('session_key_name')
+      (new Auth)->read_cached_config('session_key_name')
     ];
   }
 
   public static function initialize_session(): void
   {
-    $key = (new Auth)->read_config('session_key_name');
+    $key = (new Auth)->read_cached_config('session_key_name');
     $session = new SessionManager(true);
 
     if (!$session->exists($key))
@@ -138,7 +138,7 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
    */
   public static function from_config($name_of_auth): self
   {
-    $auths = (new Auth)->read_config('auths');
+    $auths = (new Auth)->read_cached_config('auths');
 
     if (!isset($auths[$name_of_auth]))
       throw new AuthDefinitionException("This auth doesn't exist in config : '$name_of_auth'");

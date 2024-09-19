@@ -22,7 +22,7 @@ class Csrf extends ConfigurableElement implements
   public static function initialize_session(): void
   {
     $session = new SessionManager(true);
-    $key = (new self)->read_config('session_keyword');
+    $key = (new self)->read_cached_config('session_keyword');
 
     if (!$session->exists($key))
       $session->set($key,  static::$csrf = base64_encode(random_bytes(64)));
@@ -33,7 +33,7 @@ class Csrf extends ConfigurableElement implements
   public static function get_session_reserved_keywords(): array
   {
     return [
-      (new self)->read_config('session_keyword')
+      (new self)->read_cached_config('session_keyword')
     ];
   }
 }

@@ -15,8 +15,24 @@ class RunCommand extends ConsoleCommand
     return "run";
   }
 
+  public function check_init_db()
+  {
+    global $db;
+
+    if (is_a($db, Database::class)) return;
+
+    $db = new Database;
+    $db->initialize();
+    $db->execute();
+  }
+
   public function execute($args): void
   {
+    $this->check_init_db();
+
+    global $db;
+    /** @var Database $db */
+
     $args = array_slice($args, 1);
 
     $params = array_filter($args, function ($e) {
@@ -37,12 +53,13 @@ class RunCommand extends ConsoleCommand
   protected function run_routes()
   {
     (new CacheCommand)->clear_route();
-    (new Router(true))->initialize();
+    (new Router)->initialize();
   }
 
   protected function run_database()
   {
-    $imports = (new Database)->read_config('imports');
+    global $db;
+    $imports = $db->read_cached_config('imports');
 
     foreach ($imports as $import) {
       $file_content = file_get_contents(___DIR___ . "/database/$import");

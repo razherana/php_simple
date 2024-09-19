@@ -41,7 +41,7 @@ class CacheCommand extends ConsoleCommand
   {
     foreach (
       array_diff(
-        scandir($dir = ___DIR___ . '/' . (new View)->read_config('compiled')),
+        scandir($dir = ___DIR___ . '/' . (new View)->read_cached_config('compiled')),
         ['.', '..']
       )
       as $file
@@ -54,7 +54,7 @@ class CacheCommand extends ConsoleCommand
   {
     foreach (
       array_diff(
-        scandir($dir = ___DIR___ . '/' . (new Router)->read_config('route_storage')),
+        scandir($dir = ___DIR___ . '/' . (new Router)->read_cached_config('route_storage')),
         ['.', '..']
       )
       as $file

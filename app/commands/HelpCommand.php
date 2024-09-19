@@ -18,7 +18,7 @@ class HelpCommand extends ConsoleCommand
    */
   protected function search_command($command)
   {
-    foreach ((new Console(['random_value']))->read_config('commands') as $comm) {
+    foreach ((new Console(['random_value']))->read_cached_config('commands') as $comm) {
       if (($c = new $comm)->check([$command]))
         return $c;
     }

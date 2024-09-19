@@ -16,7 +16,7 @@ class CsrfMiddleware extends BaseMiddleware
   public function checks(): bool
   {
     return $this->request->method() === "POST" &&
-      (($this->request->postParameters[(new Csrf)->read_config('session_keyword')] ?? false) != $this::get_csrf());
+      (($this->request->postParameters[(new Csrf)->read_cached_config('session_keyword')] ?? false) != $this::get_csrf());
   }
 
   public function execute(): void
