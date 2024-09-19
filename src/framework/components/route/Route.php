@@ -118,6 +118,7 @@ class Route
    */
   public function test_if_current($uri): bool
   {
+    if ($this->request->method() !== $this->method) return false;
     // Checks if the route_uri has << >> which means it has route_vars
     if (strpos($this->uri, '<<') !== false && strpos($this->uri, '>>')) {
       return $this->check_with_var($uri);
@@ -315,7 +316,7 @@ class Route
         str_replace(
 
           // Search for route_dir
-          (___DIR___ . '/' . (new Router)->read_config('route_dir')),
+          (___DIR___ . '/' . (new Router)->read_cached_config('route_dir')),
 
           // And replace it with blank, so it removes the route_dir
           '',
