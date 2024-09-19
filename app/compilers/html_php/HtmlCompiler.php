@@ -5,6 +5,7 @@ namespace compilers\html_php;
 use compilers\html_php\components\HtmlAuth;
 use compilers\html_php\components\HtmlBlock;
 use compilers\html_php\components\HtmlComment;
+use compilers\html_php\components\HtmlCsrf;
 use compilers\html_php\components\HtmlElse;
 use compilers\html_php\components\HtmlElseIf;
 use compilers\html_php\components\HtmlEndBlock;
@@ -37,6 +38,7 @@ class HtmlCompiler extends AbstractCompiler
   {
     return [
       HtmlComment::class,
+      HtmlCsrf::class,
       HtmlIf::class,
       HtmlEndIf::class,
       HtmlAuth::class,
