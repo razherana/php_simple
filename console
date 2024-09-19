@@ -40,7 +40,6 @@ $app = Application::get();
 Request::$ignore = true;
 
 $app->add_component([
-  new Database,
   new Console($argv)
 ]);
 
