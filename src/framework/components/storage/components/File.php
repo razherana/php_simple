@@ -16,6 +16,12 @@ class File
   protected $path = "";
 
   /**
+   * Cached content
+   * @var ?string $cached_content
+   */
+  protected $cached_content = null;
+
+  /**
    * Make a file
    * @param string $path The path of the file, relative or absolute
    * @param bool $relative Tells if the path is relative or absolute
@@ -61,7 +67,9 @@ class File
   {
     if (!$this->exists())
       throw new UnexistantFileException($this->path());
-    return file_get_contents($this->path());
+    if (!is_null($this->cached_content))
+      return $this->cached_content;
+    return file_get_contents($this->cached_content = $this->path());
   }
 
   /**
