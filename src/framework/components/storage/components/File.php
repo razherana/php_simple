@@ -111,4 +111,24 @@ class File
       throw new UnexistantFileException($this->path());
     return mime_content_type($this->path());
   }
+
+  /**
+   * Get file infos
+   */
+  public function extension()
+  {
+    if (!$this->exists())
+      throw new UnexistantFileException($this->path());
+    return pathinfo($this->path(), PATHINFO_EXTENSION);
+  }
+
+  /**
+   * Get the size of this file
+   */
+  public function size()
+  {
+    if (!$this->exists())
+      throw new UnexistantFileException($this->path());
+    return filesize($this->path());
+  }
 }
