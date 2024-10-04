@@ -11,6 +11,7 @@ use framework\components\database\Database;
 use framework\components\debug\Debug;
 use framework\components\route\Router;
 use framework\components\session\Session;
+use framework\components\storage\Storage;
 
 global $app;
 
@@ -26,6 +27,7 @@ $deb->execute();
 
 // Add components here
 $components = [
+  new Storage,
   new Database,
   new Session,
   new Router,
