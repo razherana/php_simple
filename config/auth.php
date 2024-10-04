@@ -13,7 +13,6 @@ return [
    */
   "auths" => [
     // "name_of_auth" => [Model::class, 'id_column'|['id_column1', 'id_column2', ...], 'pass_column', ?\Closure hash_method, ?\Closure password_verify, ?\Closure id_relation],
-    "users" => [User::class, 'name']
   ],
 
   /**
