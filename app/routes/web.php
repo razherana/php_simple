@@ -1,6 +1,6 @@
 <?php
 
-use compilers\php\PhpCompiler;
+use compilers\html_php\HtmlCompiler;
 use framework\components\route\Route;
 use framework\rule\Rule;
 use http\controllers\HphpController;
@@ -8,7 +8,7 @@ use http\controllers\HphpController;
 Route::get('/', function () {
   return view("welcome", [
     'time' => date("d/m/Y")
-  ], PhpCompiler::class);
+  ], HtmlCompiler::class);
 })->name('index')->save();
 
 Route::get('/hphp/<<testvalue>>', [HphpController::class, 'index'])->rules([
