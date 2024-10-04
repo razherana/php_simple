@@ -3,7 +3,6 @@
 use commands\MakeCommand;
 use framework\base\Application;
 use framework\components\console\Console;
-use framework\components\database\Database;
 use framework\http\Request;
 
 // If the env exists we require it
