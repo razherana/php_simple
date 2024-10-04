@@ -12,11 +12,7 @@ class Storage extends ConfigurableElement implements Component
     return 'storage';
   }
 
-  public function initialize()
-  {
-    // Initialize ini vars
-    ini_set('upload_tmp_dir', $this->read_cached_config('upload'));
-  }
+  public function initialize() {}
 
   public function execute() {}
 }
