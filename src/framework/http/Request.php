@@ -108,6 +108,7 @@ class Request
 
   public function method(): string
   {
-    return $this->server['REQUEST_METHOD'];
+    // We use ?? to prevent exception from the cli
+    return $this->server['REQUEST_METHOD'] ?? '';
   }
 }
