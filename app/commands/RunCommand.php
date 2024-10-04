@@ -7,6 +7,7 @@ use framework\components\database\Database;
 use framework\components\database\orm\mysql\executers\MysqlQueryExecuter;
 use framework\components\route\Router;
 use framework\components\session\Session;
+use framework\components\storage\upload\UploadManager;
 
 class RunCommand extends ConsoleCommand
 {
@@ -77,6 +78,15 @@ class RunCommand extends ConsoleCommand
     $session = (new Session);
     $query = $session->read_cached_config('mysql_structure');
     $query = str_replace('<<session>>', $session->read_cached_config('mysql_table'), $query);
+
+    MysqlQueryExecuter::run(
+      // We use the sql script
+      $query,
+    );
+
+    $upload = (new UploadManager(false));
+    $query = $upload->read_cached_config('mysql_tablename');
+    $query = str_replace('<<upload>>', $query, $upload->read_cached_config('mysql_tablequery'));
 
     MysqlQueryExecuter::run(
       // We use the sql script
