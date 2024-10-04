@@ -50,7 +50,7 @@ class Console extends ConfigurableElement implements Component
 
   public function initialize()
   {
-    if (count($this->args) == 1) {
+    if (count($this->args) == 0) {
 
       if (!extension_loaded("readline"))
         throw new ConsoleInitializationException("php readline extension is not loaded, please load the extension before using Console");
