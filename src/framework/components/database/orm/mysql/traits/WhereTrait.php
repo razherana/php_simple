@@ -3,6 +3,7 @@
 namespace framework\components\database\orm\mysql\traits;
 
 use framework\components\database\orm\mysql\exceptions\MysqlWhereException;
+use framework\components\database\orm\mysql\queries\DefaultQueryMaker;
 use framework\components\database\orm\mysql\request\elements\Where;
 
 /**
@@ -48,7 +49,7 @@ trait WhereTrait
    */
   public function or_group_where($conditions)
   {
-    $dummy = new static;
+    $dummy = new DefaultQueryMaker;
     $dummy->mode_test = true;
     $conditions = $conditions->bindTo($dummy, static::class);
     $conditions();
@@ -66,7 +67,7 @@ trait WhereTrait
    */
   public function and_group_where($conditions)
   {
-    $dummy = new static;
+    $dummy = new DefaultQueryMaker;
     $dummy->mode_test = true;
     $conditions = $conditions->bindTo($dummy, static::class);
     $conditions();
