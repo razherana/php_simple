@@ -36,7 +36,7 @@ class Console extends ConfigurableElement implements Component
   {
     if (count($argv) <= 0)
       throw new ConsoleInitializationException("This shouldn't happen, the argv is empty");
-    elseif (count($argv) > 1)
+    elseif (count($argv) >= 1)
       $argv = array_slice($argv, 1);
 
     // Then add the value
