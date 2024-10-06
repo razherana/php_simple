@@ -192,13 +192,17 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
     if (empty($non_obligatory_id)) {
       // Match the where_all()
       $query->where_all($ob_id);
+    } elseif (count($obligatory_id) > 1) {
+      $query
+        ->where_all($ob_id, Where::AND)
+        ->or_group_where(function () use ($ob_id) {
+          /** @var DefaultQueryMaker $this */
+          $this->where_all($ob_id, Where::OR);
+        });
     } else {
       $query
-        ->where_all($non_ob_id, Where::OR)
-        ->and_group_where(function () use ($ob_id) {
-          /** @var DefaultQueryMaker $this */
-          $this->where_all($ob_id);
-        });
+        ->where_all($ob_id, Where::AND)
+        ->or_where($_k = array_keys($obligatory_id)[0], '=', $obligatory_id[$_k]);
     }
 
     /** @var ModelInstance[] $result */
