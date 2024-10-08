@@ -187,23 +187,17 @@ class Auth extends ConfigurableElement implements SessionReservedKeywordsInterfa
     foreach ($non_obligatory_id as $k => $v)
       $non_ob_id[] = [$k, $v];
 
-
     // Add the wheres in query
-    if (empty($non_obligatory_id)) {
-      // Match the where_all()
-      $query->where_all($ob_id);
-    } elseif (count($obligatory_id) > 1) {
-      $query
-        ->where_all($ob_id, Where::AND)
-        ->or_group_where(function () use ($ob_id) {
-          /** @var DefaultQueryMaker $this */
-          $this->where_all($ob_id, Where::OR);
-        });
-    } else {
-      $query
-        ->where_all($ob_id, Where::AND)
-        ->or_where($_k = array_keys($obligatory_id)[0], '=', $obligatory_id[$_k]);
-    }
+    $query->where_all($ob_id);
+
+    // We make it into group if multiple non obligatory id columns
+    if (count($non_obligatory_id) > 1)
+      $query->or_group_where(function () use ($non_ob_id) {
+        /** @var DefaultQueryMaker $this */
+        $this->where_all($non_ob_id, Where::OR);
+      });
+    else
+      $query->or_where($_k = array_keys($non_obligatory_id)[0], '=', $non_obligatory_id[$_k]);
 
     /** @var ModelInstance[] $result */
     $result = $query->get();
